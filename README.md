@@ -1,1 +1,1 @@
-# gamereviewapp
+# Landing Page Template
