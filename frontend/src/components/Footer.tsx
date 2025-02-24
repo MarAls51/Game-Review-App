@@ -13,7 +13,6 @@ export const Footer = () => {
             className="font-bold text-xl flex"
           >
             <LogoIcon />
-            ShadcnUI/React
           </a>
         </div>
 
@@ -25,7 +24,7 @@ export const Footer = () => {
               href="#"
               className="opacity-60 hover:opacity-100"
             >
-              Github
+              My Account
             </a>
           </div>
 
@@ -45,7 +44,7 @@ export const Footer = () => {
               href="#"
               className="opacity-60 hover:opacity-100"
             >
-              Dribbble
+              Dribbble1
             </a>
           </div>
         </div>
@@ -91,7 +90,7 @@ export const Footer = () => {
               href="#"
               className="opacity-60 hover:opacity-100"
             >
-              Features
+              General Review
             </a>
           </div>
 

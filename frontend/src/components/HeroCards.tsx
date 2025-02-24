@@ -171,3 +171,84 @@ export const HeroCards = () => {
     </div>
   );
 };
+
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/autoplay";
+import { Autoplay } from "swiper/modules";
+
+export const HeroLandingPageCards = () => {
+  return (
+    <Swiper
+      modules={[Autoplay]}
+      slidesPerView={3}
+      loop={true}
+      className="w-full"
+    >
+      <SwiperSlide>
+        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <Avatar>
+              <AvatarImage alt="" src="https://github.com/shadcn.png" />
+              <AvatarFallback>SH</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <CardTitle className="text-lg">John Doe React</CardTitle>
+              <CardDescription>@john_doe</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>This landing page is awesome!</CardContent>
+        </Card>
+      </SwiperSlide>
+
+      <SwiperSlide>
+        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <Avatar>
+              <AvatarImage alt="" src="https://github.com/shadcn.png" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <CardTitle className="text-lg">Jane Doe React</CardTitle>
+              <CardDescription>@jane_doe</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>This landing page changed my workflow!</CardContent>
+        </Card>
+      </SwiperSlide>
+      <SwiperSlide>
+        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <Avatar>
+              <AvatarImage alt="" src="https://github.com/shadcn.png" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <CardTitle className="text-lg">Jane Doe React</CardTitle>
+              <CardDescription>@jane_doe</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>This landing page changed my workflow!</CardContent>
+        </Card>
+      </SwiperSlide>
+      <SwiperSlide>
+        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+          <CardHeader className="flex flex-row items-center gap-4 pb-2">
+            <Avatar>
+              <AvatarImage alt="" src="https://github.com/shadcn.png" />
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <CardTitle className="text-lg">Jane Doe React</CardTitle>
+              <CardDescription>@jane_doe</CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>This landing page changed my workflow!</CardContent>
+        </Card>
+      </SwiperSlide>
+    </Swiper>
+  );
+};
+
+

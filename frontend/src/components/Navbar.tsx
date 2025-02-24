@@ -4,11 +4,12 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { UserIcon } from "lucide-react";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
+  // SheetHeader,
+  // SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 
@@ -26,19 +27,23 @@ interface RouteProps {
 const routeList: RouteProps[] = [
   {
     href: "#features",
-    label: "Features",
+    label: "TLDR",
   },
   {
     href: "#testimonials",
-    label: "Testimonials",
+    label: "Deep Dive",
   },
   {
     href: "#pricing",
-    label: "Pricing",
+    label: "Personalized Review",
   },
   {
     href: "#faq",
-    label: "FAQ",
+    label: "Explore",
+  },
+  {
+    href: "#faq",
+    label: "About",
   },
 ];
 
@@ -55,7 +60,6 @@ export const Navbar = () => {
               className="ml-2 font-bold text-xl flex"
             >
               <LogoIcon />
-              ShadcnUI/React
             </a>
           </NavigationMenuItem>
 
@@ -77,11 +81,11 @@ export const Navbar = () => {
               </SheetTrigger>
 
               <SheetContent side={"left"}>
-                <SheetHeader>
+                {/* <SheetHeader>
                   <SheetTitle className="font-bold text-xl">
                     Shadcn/React
                   </SheetTitle>
-                </SheetHeader>
+                </SheetHeader> */}
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
                   {routeList.map(({ href, label }: RouteProps) => (
                     <a
@@ -126,15 +130,16 @@ export const Navbar = () => {
             ))}
           </nav>
 
+
           <div className="hidden md:flex gap-2">
             <a
               rel="noreferrer noopener"
-              href="https://github.com/leoMirandaa/shadcn-landing-page.git"
+              href=""
               target="_blank"
               className={`border ${buttonVariants({ variant: "secondary" })}`}
             >
-              <GitHubLogoIcon className="mr-2 w-5 h-5" />
-              Github
+              <UserIcon className="mr-2 w-5 h-5" /> 
+              Account
             </a>
 
             <ModeToggle />

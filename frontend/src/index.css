@@ -1,0 +1,105 @@
+html {
+  scroll-behavior: smooth;
+}
+
+/* HeroCards background shadow */
+.shadow {
+  position: absolute;
+  background: #ffffff; /* Change to white */
+  border-radius: 24px;
+  rotate: 35deg;
+  z-index: -1;
+  width: 260px;
+  top: 200px;
+  height: 400px;
+  filter: blur(150px);
+  will-change: transform;
+  animation: shadow-slide infinite 4s linear alternate;
+}
+
+@keyframes shadow-slide {
+  from {
+    background: rgba(255, 255, 255, 0.2); /* Light white with transparency */
+    right: 460px;
+  }
+  to {
+    background: rgba(255, 255, 255, 0.8); /* Light white with more opacity */
+    right: 160px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .shadow {
+    top: 70px;
+  }
+
+  @keyframes shadow-slide {
+    from {
+      background: rgba(255, 255, 255, 0.2); /* Light white with transparency */
+      right: 460px;
+    }
+    to {
+      background: rgba(255, 255, 255, 0.5); /* Light white with more opacity */
+      right: 160px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .shadow {
+    top: 70px;
+    width: 100px;
+    height: 350px;
+    filter: blur(60px);
+  }
+
+  @keyframes shadow-slide {
+    from {
+      background: rgba(255, 255, 255, 0.2); /* Light white with transparency */
+      right: 280px;
+    }
+    to {
+      background: rgba(255, 255, 255, 0.3); /* Light white with more opacity */
+      right: 100px;
+    }
+  }
+}
+
+.typing-effect {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 2s steps(30) 1s forwards, blink 0.75s step-end infinite;
+}
+
+/* Typing effect */
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* Blinking cursor */
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll 15s linear infinite;
+}
