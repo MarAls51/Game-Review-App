@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { SearchBar } from "./SearchBar";
-import { HeroLandingPageCards } from "./HeroCards";
+import { HeroLandingPageCards, GamePageCards } from "./HeroCards"; // Your existing cards component
 
 export const Hero = () => {
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
-    // Implement your search functionality here
+  const [games, setGames] = useState<any[]>([]);
+
+  const handleSearch = (searchResults: any[]) => {
+    setGames(searchResults); 
   };
 
   return (
@@ -29,11 +31,14 @@ export const Hero = () => {
           Simply search for the game you're interested in, and we'll tell you if it's worth your time!
         </p>
 
-        {/* Search Bar Component */}
+
         <SearchBar onSearch={handleSearch} />
       </div>
 
-      {/* Shadow effect */}
+      <div className="w-full mt-10">
+        <GamePageCards games={games} />
+      </div>
+
       <div className="shadow"></div>
     </section>
   );

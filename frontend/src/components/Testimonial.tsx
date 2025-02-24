@@ -1,10 +1,9 @@
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-export const Newsletter = () => {
+export const Testimonial = () => {
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log("Subscribed!");
   };
 
   return (
@@ -15,11 +14,11 @@ export const Newsletter = () => {
         <h3 className="text-center text-4xl md:text-5xl font-bold">
           Enjoying the app? Give us your{" "}
           <span className="inline bg-gradient-to-r from-[#00FF00] to-[#32CD32] text-transparent bg-clip-text">
-            Testemonial.
+            Testimonial.
           </span>
         </h3>
         <p className="text-xl text-muted-foreground text-center mt-4 mb-8">
-          Lorem ipsum dolor sit amet consectetur.
+          Feel free to write your honest opnion! We love community feedback.
         </p>
 
         <form
@@ -27,11 +26,11 @@ export const Newsletter = () => {
           onSubmit={handleSubmit}
         >
           <Input
-            placeholder="leomirandadev@gmail.com"
+            placeholder="garbage application ky...."
             className="bg-muted/50 dark:bg-muted/80 "
             aria-label="email"
           />
-          <Button>Subscribe</Button>
+          <Button>Submit</Button>
         </form>
       </div>
 

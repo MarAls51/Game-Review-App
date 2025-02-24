@@ -12,6 +12,12 @@ import {
 import { Check, Linkedin } from "lucide-react";
 import { LightBulbIcon } from "./Icons";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
+// import { useEffect, useState } from "react";
+import "swiper/css";
+import "swiper/css/autoplay";
+import React, { useContext } from "react";
+import { GameContext } from "./MyProvider.tsx";
+// import axios from "axios";
 
 export const HeroCards = () => {
   return (
@@ -177,6 +183,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
+import { useState } from "react";
 
 export const HeroLandingPageCards = () => {
   return (
@@ -251,4 +258,127 @@ export const HeroLandingPageCards = () => {
   );
 };
 
+interface GameCardProps {
+  games: any[];
+}
+
+// interface Testimonial {
+//   id: number;
+//   name: string;
+//   username: string;
+//   avatar: string;
+//   content: string;
+// }
+
+export const GamePageCards: React.FC<GameCardProps> = ({ games }) => {
+  // const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  // const [loading, setLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const fetchTestimonials = async () => {
+  //     try {
+  //       const response = await axios.get("/api/testimonials");
+  //       setTestimonials(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching testimonials:", error);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchTestimonials();
+  // }, []);
+
+  // if (loading) return <p>Loading...</p>;
+
+  // if (games.length === 0 && testimonials.length === 0) {
+  //   return <p>No results found.</p>;
+  // }
+
+  // return (
+  //   <Swiper modules={[Autoplay]} slidesPerView={3} loop={true} className="w-full">
+  //     {games.length > 0
+  //       ? games.map((game) => (
+  //           <SwiperSlide key={game.appid}>
+  //             <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+  //               <CardHeader className="flex flex-row items-center gap-4 pb-2">
+  //                 <Avatar>
+  //                   <AvatarImage alt={game.name} src={game.header_image} />
+  //                   <AvatarFallback>{game.name.slice(0, 2)}</AvatarFallback>
+  //                 </Avatar>
+  //                 <div className="flex flex-col">
+  //                   <CardTitle className="text-lg">{game.name}</CardTitle>
+  //                   <CardDescription>@{game.appid}</CardDescription>
+  //                 </div>
+  //               </CardHeader>
+  //               <CardContent>{game.short_description || "No description available."}</CardContent>
+  //             </Card>
+  //           </SwiperSlide>
+  //         ))
+  //       : testimonials.map((testimonial) => (
+  //           <SwiperSlide key={testimonial.id}>
+  //             <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+  //               <CardHeader className="flex flex-row items-center gap-4 pb-2">
+  //                 <Avatar>
+  //                   <AvatarImage alt={testimonial.name} src={testimonial.avatar} />
+  //                   <AvatarFallback>{testimonial.name.slice(0, 2)}</AvatarFallback>
+  //                 </Avatar>
+  //                 <div className="flex flex-col">
+  //                   <CardTitle className="text-lg">{testimonial.name}</CardTitle>
+  //                   <CardDescription>@{testimonial.username}</CardDescription>
+  //                 </div>
+  //               </CardHeader>
+  //               <CardContent>{testimonial.content}</CardContent>
+  //             </Card>
+  //           </SwiperSlide>
+  //         ))}
+  //   </Swiper>
+  // );
+  
+
+  const { selectedGame, setSelectedGame } = useContext(GameContext);
+
+  const handleSelectClick = (appid: string) => {
+    setSelectedGame(appid);
+  };
+
+  return (
+    <Swiper modules={[Autoplay]} slidesPerView={3} loop={true} className="w-full">
+      {games.length > 0 &&
+        games.map((game) => (
+          <SwiperSlide key={game.appid}  className="pb-[50px]">
+            <Card
+              className={`w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10 transform transition-transform duration-300 ease-in-out overflow-hidden
+                ${selectedGame === game.appid ? "scale-95 rotate-3" : "scale-90"}
+              `}
+              style={{ transformOrigin: "center" }}
+            >
+              {game.details.screenshots?.length > 0 && (
+                <img
+                  src={game.details.screenshots[0].path_full}
+                  alt={`${game.name} screenshot`}
+                  className="w-full object-cover rounded-t-lg"
+                />
+              )}
+              <CardHeader className="flex flex-col items-center pb-2">
+                <CardTitle className="text-lg text-center">{game.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                {game.details.short_description || "No description available."}
+              </CardContent>
+              <CardFooter className="flex justify-center pb-4">
+                <button
+                  onClick={() => handleSelectClick(game.appid)}
+                  className="bg-green-500 text-white font-bold py-2 px-4 rounded w-1/2 hover:bg-green-600"
+                >
+                  Select
+                </button>
+              </CardFooter>
+            </Card>
+          </SwiperSlide>
+        ))}
+    </Swiper>
+  );
+}
+  
 

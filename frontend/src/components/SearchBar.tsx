@@ -1,7 +1,8 @@
 import { useState } from "react";
+import axios from "axios";
 
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  onSearch: (games: any[]) => void;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
@@ -11,9 +12,22 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch(searchQuery);
+
+    try {
+      console.log(import.meta.env.VITE_BACKEND_URL)
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/search`, {
+        params: { query: searchQuery },
+      });
+
+      const games = response.data;
+      console.log(games)
+
+      onSearch(games);
+    } catch (error) {
+      console.error("Error fetching games:", error);
+    }
   };
 
   return (
@@ -22,11 +36,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         type="text"
         value={searchQuery}
         onChange={handleSearchChange}
-        placeholder="Search for a game..."
-        className="w-full px-6 py-3 bg-white text-black rounded-full placeholder-gray-900 text-lg focus:ring-2"
+        placeholder="Dead by daylight..."
+        className="w-full px-6 py-3 bg-white text-black rounded-full placeholder-dark-grey text-lg placeholder-normal focus:ring-2 focus:ring-green-500"
       />
     </form>
   );
 };
-
-
