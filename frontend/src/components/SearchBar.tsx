@@ -16,13 +16,16 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     e.preventDefault();
 
     try {
-      console.log(import.meta.env.VITE_BACKEND_URL)
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/search`, {
-        params: { query: searchQuery },
-      });
+      console.log(import.meta.env.VITE_BACKEND_URL);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/search`,
+        {
+          params: { query: searchQuery },
+        },
+      );
 
       const games = response.data;
-      console.log(games)
+      console.log(games);
 
       onSearch(games);
     } catch (error) {

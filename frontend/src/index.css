@@ -69,7 +69,9 @@ html {
   display: inline-block;
   overflow: hidden;
   white-space: nowrap;
-  animation: typing 2s steps(30) 1s forwards, blink 0.75s step-end infinite;
+  animation:
+    typing 2s steps(30) 1s forwards,
+    blink 0.75s step-end infinite;
 }
 
 /* Typing effect */

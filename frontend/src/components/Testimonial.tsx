@@ -18,7 +18,8 @@ export const Testimonial = () => {
           </span>
         </h3>
         <p className="text-xl text-muted-foreground text-center mt-4 mb-8">
-          Feel free to write your honest opnion! We love community feedback.
+          Feel free to write your honest opinion! All new testimonials are shown on the landing page for transparency. 
+          We love community feedback.
         </p>
 
         <form

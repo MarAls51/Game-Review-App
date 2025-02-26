@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { SearchBar } from "./SearchBar";
-import { HeroLandingPageCards, GamePageCards } from "./HeroCards"; // Your existing cards component
+import { HeroLandingPageCards, GamePageCards } from "./HeroCards";
+import { GameContext } from "./MyProvider";
+import { GameCard } from "./HeroCards";
 
 export const Hero = () => {
   const [games, setGames] = useState<any[]>([]);
+  const { selectedGame } = useContext(GameContext);
 
   const handleSearch = (searchResults: any[]) => {
-    setGames(searchResults); 
+    setGames(searchResults);
   };
 
   return (
     <section className="container relative flex flex-col items-center text-center lg:text-start justify-center py-20 md:py-32 gap-10">
-      {/* Scrolling Testimonials Above the Title */}
       <div className="absolute top-[70px] left-[20px] w-full overflow-hidden lg:block hidden">
         <HeroLandingPageCards />
       </div>
@@ -28,15 +30,21 @@ export const Hero = () => {
         </main>
 
         <p className="text-xl text-muted-foreground md:w-10/12 mx-auto lg:mx-0">
-          Simply search for the game you're interested in, and we'll tell you if it's worth your time!
+          Simply search for the game you're interested in, and we'll tell you if
+          it's worth your time!
         </p>
-
 
         <SearchBar onSearch={handleSearch} />
       </div>
 
       <div className="w-full mt-10">
-        <GamePageCards games={games} />
+        {games.length === 0 && selectedGame ? (
+          <div className="w-full flex justify-center">
+            <GameCard game={selectedGame} />
+          </div>
+        ) : (
+          <GamePageCards games={games} />
+        )}
       </div>
 
       <div className="shadow"></div>

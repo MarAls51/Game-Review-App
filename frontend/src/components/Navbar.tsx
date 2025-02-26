@@ -18,22 +18,47 @@ interface RouteProps {
   href: string;
   label: string;
   requiresSelection: boolean;
-  requireLogin: boolean; 
+  requireLogin: boolean;
 }
 
 const routeList: RouteProps[] = [
-  { href: "/tldr", label: "TLDR", requiresSelection: true, requireLogin: false },
-  { href: "/deepdive", label: "Deep Dive", requiresSelection: true, requireLogin: false},
-  { href: "/personalizedreview", label: "Personalized Review", requiresSelection:true, requireLogin: true},
-  { href: "/explore", label: "Explore", requiresSelection:false, requireLogin: true },
-  { href: "/about", label: "About", requiresSelection:false, requireLogin:false },
+  {
+    href: "/tldr",
+    label: "TLDR",
+    requiresSelection: true,
+    requireLogin: false,
+  },
+  {
+    href: "/deepdive",
+    label: "Deep Dive",
+    requiresSelection: true,
+    requireLogin: false,
+  },
+  {
+    href: "/personalizedreview",
+    label: "Personalized Review",
+    requiresSelection: true,
+    requireLogin: true,
+  },
+  {
+    href: "/explore",
+    label: "Explore",
+    requiresSelection: false,
+    requireLogin: true,
+  },
+  {
+    href: "/about",
+    label: "About",
+    requiresSelection: false,
+    requireLogin: false,
+  },
 ];
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [showMessage, setShowMessage] = useState<string>("");
   const auth = useAuth();
-  const { selectedGame } = useContext(GameContext); 
+  const { selectedGame } = useContext(GameContext);
   const navigate = useNavigate();
 
   const handleAuthClick = () => {
@@ -49,15 +74,26 @@ export const Navbar = () => {
       const timer = setTimeout(() => setShowMessage(""), 3000);
       return () => clearTimeout(timer);
     }
-  }, [showMessage]); 
+  }, [showMessage]);
 
-  const handleNavigation = (requiresSelection: boolean, requireLogin:boolean, href: string) => {
-    if (requireLogin && !auth.isAuthenticated){
-      setShowMessage("You must first login to use this feature.")
-    }
-    else if(requiresSelection && !selectedGame) {
-      setShowMessage("You must first select a game from the search bar to use this feature.")
-    } else {
+  const handleNavigation = (
+    requiresSelection: boolean,
+    requireLogin: boolean,
+    href: string,
+  ) => {
+    // if (requireLogin && !auth.isAuthenticated) {
+    //   setShowMessage("You must first login to use this feature.");
+    // } else if (requiresSelection && !selectedGame) {
+    //   setShowMessage(
+    //     "You must first select a game from the search bar to use this feature.",
+    //   );
+    // }
+    if (requiresSelection && !selectedGame) {
+        setShowMessage(
+          "You must first select a game from the search bar to use this feature.",
+        );
+      }
+     else {
       setShowMessage("");
       navigate(href);
     }
@@ -76,22 +112,33 @@ export const Navbar = () => {
           <span className="flex md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
-                <Menu className="flex md:hidden h-5 w-5" onClick={() => setIsOpen(true)}>
+                <Menu
+                  className="flex md:hidden h-5 w-5"
+                  onClick={() => setIsOpen(true)}
+                >
                   <span className="sr-only">Menu Icon</span>
                 </Menu>
               </SheetTrigger>
 
               <SheetContent side={"left"}>
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
-                  {routeList.map(({ href, label, requiresSelection, requireLogin }) => (
-                    <button
-                      key={label}
-                      onClick={() => handleNavigation(requiresSelection, requireLogin, href)}
-                      className={buttonVariants({ variant: "ghost" })}
-                    >
-                      {label}
-                    </button>
-                  ))}
+                  {routeList.map(
+                    ({ href, label, requiresSelection, requireLogin }) => (
+                      <button
+                        key={label}
+                        onClick={() =>
+                          handleNavigation(
+                            requiresSelection,
+                            requireLogin,
+                            href,
+                          )
+                        }
+                        className={buttonVariants({ variant: "ghost" })}
+                      >
+                        {label}
+                      </button>
+                    ),
+                  )}
                   <a
                     href="https://github.com/leoMirandaa/shadcn-landing-page.git"
                     target="_blank"
@@ -107,15 +154,19 @@ export const Navbar = () => {
           </span>
 
           <nav className="hidden md:flex gap-2">
-            {routeList.map(({ href, label, requiresSelection, requireLogin }) => (
-              <button
-                key={label}
-                onClick={() => handleNavigation(requiresSelection, requireLogin, href)}
-                className={`text-[17px] ${buttonVariants({ variant: "ghost" })}`}
-              >
-                {label}
-              </button>
-            ))}
+            {routeList.map(
+              ({ href, label, requiresSelection, requireLogin }) => (
+                <button
+                  key={label}
+                  onClick={() =>
+                    handleNavigation(requiresSelection, requireLogin, href)
+                  }
+                  className={`text-[17px] ${buttonVariants({ variant: "ghost" })}`}
+                >
+                  {label}
+                </button>
+              ),
+            )}
           </nav>
 
           <div className="hidden md:flex gap-2">
@@ -126,7 +177,6 @@ export const Navbar = () => {
               <UserIcon className="mr-2 w-5 h-5" />
               {auth.isAuthenticated ? "Sign Out" : "Sign In"}
             </button>
-
           </div>
         </NavigationMenuList>
       </NavigationMenu>

@@ -17,11 +17,11 @@ const cognitoAuthConfig = {
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider {...cognitoAuthConfig}>
-      <GameProvider> 
+      <GameProvider>
         <ThemeProvider>
           <App />
         </ThemeProvider>
       </GameProvider>
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

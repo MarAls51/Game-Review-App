@@ -1,18 +1,18 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'; // Import necessary components for routing
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import necessary components for routing
 import { useAuth } from "react-oidc-context";
 import { About } from "./components/About";
 import { Cta } from "./components/Cta";
-import { FAQ } from "./components/FAQ";
-import { Features } from "./components/Features";
+import { Explore } from "./components/Explore";
+import { Tldr } from "./components/Tldr";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
 import { HowItWorks } from "./components/HowItWorks";
 import { Navbar } from "./components/Navbar";
-import { Pricing } from "./components/Pricing";
+import { PersonalizedReview } from "./components/PersonalizedReview";
 import { ScrollToTop } from "./components/ScrollToTop";
 import { Services } from "./components/Services";
 import { Team } from "./components/Team";
-import { Testimonials } from "./components/Testimonials";
+import { DeepDive } from "./components/DeepDive";
 import { LoadingScreen } from "./components/LoadingScreen";
 import "./App.css";
 import { useEffect, useState } from "react";
@@ -68,18 +68,18 @@ function App() {
           Sign in
         </button>
       )} */}
-      
+
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/about" element={<About />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/tldr" element={<Features />} />
+        <Route path="/tldr" element={<Tldr />} />
         <Route path="/services" element={<Services />} />
         <Route path="/cta" element={<Cta />} />
-        <Route path="/deepdive" element={<Testimonials />} />
+        <Route path="/deepdive" element={<DeepDive />} />
         <Route path="/team" element={<Team />} />
-        <Route path="/personalizedreview" element={<Pricing />} />
-        <Route path="/explore" element={<FAQ />} />
+        <Route path="/personalizedreview" element={<PersonalizedReview />} />
+        <Route path="/explore" element={<Explore />} />
       </Routes>
 
       <Footer />
