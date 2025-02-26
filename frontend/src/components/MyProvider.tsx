@@ -1,9 +1,12 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
 
 interface game {
+  type: any;
   appid: any;
   name: any;
-  details: any;
+  description: any;
+  screenshots: any;
+  movies: any;
 }
 
 interface GameContextType {

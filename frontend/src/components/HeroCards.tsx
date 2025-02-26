@@ -111,7 +111,6 @@ export const HeroCards = () => {
         </CardFooter>
       </Card>
 
-      {/* Pricing */}
       <Card className="absolute top-[150px] left-[50px] w-72  drop-shadow-xl shadow-black/10 dark:shadow-white/10">
         <CardHeader>
           <CardTitle className="flex item-center justify-between">
@@ -173,7 +172,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
-import { useState } from "react";
 
 export const HeroLandingPageCards = () => {
   return (
@@ -253,9 +251,12 @@ interface GameCardProps {
 }
 
 interface game {
+  type: any;
   appid: any;
   name: any;
-  details: any;
+  description: any;
+  screenshots: any;
+  movies: any;
 }
 
 interface GameCard {
@@ -275,15 +276,20 @@ export const GameCard: React.FC<GameCard> = ({ game }) => {
 
   const isSelected = selectedGame?.appid === game.appid;
 
-  return game.details ? ( // Check if game.details is not null
+  const truncateDescription = (desc: string) => {
+    if (!desc) return "No description available.";
+    return desc.length > 400 ? desc.slice(0, 400) + "..." : desc;
+  };
+
+  return game ? (
     <Card
       className={`w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10 transform transition-transform duration-300 ease-in-out overflow-hidden
           ${isSelected ? "scale-95 rotate-3" : "scale-90"}`}
-      style={{ transformOrigin: "center" }} // Ensure the transform is applied from the center
+      style={{ transformOrigin: "center" }}
     >
-      {game.details.screenshots?.length > 0 && (
+      {game.screenshots?.length > 0 && (
         <img
-          src={game.details.screenshots[0].path_full}
+          src={game.screenshots[0].path_full}
           alt={`${game.name} screenshot`}
           className="w-full object-cover rounded-t-lg"
         />
@@ -292,7 +298,7 @@ export const GameCard: React.FC<GameCard> = ({ game }) => {
         <CardTitle className="text-lg text-center">{game.name}</CardTitle>
       </CardHeader>
       <CardContent className="text-center">
-        {game.details.short_description || "No description available."}
+        {truncateDescription(game.description)}
       </CardContent>
       <CardFooter className="flex justify-center pb-4">
         <button

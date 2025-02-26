@@ -147,19 +147,33 @@ export const TldrYear = () => {
 export const Tldr = () => {
   const { selectedGame } = useContext(GameContext);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0); // State for screenshots
+  const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0); 
 
-  if (!selectedGame || !selectedGame.details) {
+  if (!selectedGame) {
     return <div>Loading...</div>;
   }
 
-  const movies = selectedGame.details.movies || [];
-  const screenshots = selectedGame.details.screenshots || [];
+  const movies = selectedGame.movies || [];
+  const screenshots = selectedGame.screenshots || [];
 
   const hasMovies = movies.length > 0;
   const hasScreenshots = screenshots.length > 0;
 
-  const videoSrc = hasMovies ? movies[currentVideoIndex]?.mp4.max : null;
+  const rawVideoUrl = hasMovies ? movies[currentVideoIndex]?.url : null;
+  const isSteam = selectedGame.type === "steam";
+  const isYouTube = rawVideoUrl?.includes("youtube.com") || rawVideoUrl?.includes("youtu.be");
+
+  const getYouTubeEmbedUrl = (url: string) => {
+    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+    return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+  };
+
+  const videoSrc = isYouTube
+    ? getYouTubeEmbedUrl(rawVideoUrl)
+    : isSteam
+    ? rawVideoUrl
+    : null;
+
   const screenshotSrc = !hasMovies && hasScreenshots ? screenshots[currentScreenshotIndex]?.path_full : null;
 
   const handleNextMedia = (next: boolean, isVideo: boolean) => {
@@ -202,11 +216,14 @@ export const Tldr = () => {
             <CardTitle className="text-center">{selectedGame.name}</CardTitle>
           </CardHeader>
           <CardContent className="flex justify-center">
-            {videoSrc ? (
-              <video
-                controls
+            {isSteam && videoSrc ? (
+              <video controls src={videoSrc} className="w-full h-[500px] lg:w-[800px] lg:h-[500px] rounded-lg" />
+            ) : isYouTube && videoSrc ? (
+              <iframe
                 src={videoSrc}
                 className="w-full h-[500px] lg:w-[800px] lg:h-[500px] rounded-lg"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
               />
             ) : screenshotSrc ? (
               <img
@@ -222,7 +239,7 @@ export const Tldr = () => {
           <CardFooter>
             <div>
               <CardTitle className="text-center">Description</CardTitle>
-              <p className="pt-4">{selectedGame.details.short_description}</p>
+              <p className="pt-4">{selectedGame.description}</p>
             </div>
           </CardFooter>
         </Card>
