@@ -14,33 +14,21 @@ interface FAQProps {
 const FAQList: FAQProps[] = [
   {
     question: "How is my data stored?",
-    answer: "Yes. It is a free ChadcnUI template.",
+    answer: "The only data collected and stored in the database are the associated accounts (steam, microsoft, etc...) that you choose to provide us to help us give you a personalized enjoyable experience if you so choose. Otherwise we don't collect any personal data.",
     value: "item-1",
   },
   {
-    question: "Lorem ipsum dolor sit amet consectetur adipisicing elit?",
+    question: "Is this just another AI wrapper?",
     answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
+      "No, I personally create the custom models for both the personalized and general reviews to ensure highly precise and accurate quality. Currently Chat GPT APIs or similar are not being used.",
     value: "item-2",
   },
   {
     question:
-      "Lorem ipsum dolor sit amet  Consectetur natus dolores minus quibusdam?",
+      "What are the testimonials?",
     answer:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Labore qui nostrum reiciendis veritatis necessitatibus maxime quis ipsa vitae cumque quo?",
+      "If you enjoy the application and the service provided (or not) you can give your own testimonial, new testimonials are publically shared on the landing page for transparency. Testimonials are also stored so we can review and iteratively improve the service provided.",
     value: "item-3",
-  },
-  {
-    question: "Lorem ipsum dolor sit amet, consectetur adipisicing elit?",
-    answer: "Lorem ipsum dolor sit amet consectetur, adipisicing elit.",
-    value: "item-4",
-  },
-  {
-    question:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur natus?",
-    answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint labore quidem quam? Consectetur sapiente iste rerum reiciendis animi nihil nostrum sit quo, modi quod.",
-    value: "item-5",
   },
 ];
 
