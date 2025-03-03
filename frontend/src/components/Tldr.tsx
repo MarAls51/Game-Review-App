@@ -1,16 +1,10 @@
 import { Badge } from "./ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { useState, useContext } from "react";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect, useContext } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { GameContext } from "./MyProvider";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
-
+import axios from "axios";
 
 const featureList: string[] = ["Filtered", "Unfiltered"];
 
@@ -142,20 +136,38 @@ export const TldrYear = () => {
   );
 };
 
-
-
 export const Tldr = () => {
   const { selectedGame } = useContext(GameContext);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0); 
+  const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
+  const [tldrData, setTldrData] = useState(null);
+  
+  useEffect(() => {
+    if (selectedGame) {
+      const fetchTldrData = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/tldr`, {
+            params: { appid: selectedGame.appid }, 
+          });
 
+          console.log(response.data); 
+          setTldrData(response.data);  
+        } catch (error) {
+          console.error("Failed to fetch TLDR data", error);
+        }
+      };
+  
+      fetchTldrData();
+    }
+  }, [selectedGame]);
+  
+  
   if (!selectedGame) {
     return <div>Loading...</div>;
   }
 
   const movies = selectedGame.movies || [];
   const screenshots = selectedGame.screenshots || [];
-
   const hasMovies = movies.length > 0;
   const hasScreenshots = screenshots.length > 0;
 
@@ -253,6 +265,11 @@ export const Tldr = () => {
           </button>
         )}
       </div>
+      {tldrData ? (
+        <div>{JSON.stringify(tldrData)}</div>
+      ) : (
+        <div>Loading TLDR...</div>
+      )}
       {Array(3)
         .fill(null)
         .map((_, index) => (
