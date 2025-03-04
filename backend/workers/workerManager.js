@@ -3,6 +3,7 @@ const path = require('path');
 
 const WORKER_COUNT = 5;
 const workerPool = [];
+let workerIndex = 0;
 
 function createWorker() {
   console.log("Creating a new worker thread...");
@@ -27,12 +28,14 @@ function runWorkerTask(appid) {
     console.log(`Assigning worker to fetch TLDR for appid: ${appid}`);
     const worker = getWorker();
 
+    const workerId = `worker_${workerIndex++}`;
+
     worker.once('message', (data) => {
-      console.log(`Worker message received for appid ${appid}:`, data);
       if (data.error) {
         console.error(`Worker error for appid ${appid}:`, data.error);
         reject(new Error(data.error));
       } else {
+        console.log(`Received result for appid ${appid}`);
         resolve(data);
       }
       workerPool.push(worker);
@@ -44,8 +47,8 @@ function runWorkerTask(appid) {
       workerPool.push(worker);
     });
 
-    console.log(`Sending message to worker for appid: ${appid}`);
-    worker.postMessage({ appid });
+    console.log(`Sending message to worker for appid: ${appid} with workerId: ${workerId}`);
+    worker.postMessage({ appid, workerId });
   });
 }
 
