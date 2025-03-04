@@ -6,3 +6,5 @@ node_modules/
 
 # Ignore env files
 workers/scrapers/env/
+
+routes/const.js

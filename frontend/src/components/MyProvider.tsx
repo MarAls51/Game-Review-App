@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useState, useEffect, ReactNode, useRef } from "react";
 import axios from 'axios';
 
 interface Game {
@@ -39,24 +39,30 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
   const [tldrData, setTldrData] = useState<any>(null);
 
+  const fetchInProgress = useRef(false);
+
   useEffect(() => {
-    if (selectedGame) {
+    if (selectedGame && !fetchInProgress.current) {
+      fetchInProgress.current = true;
       const fetchTldrData = async () => {
         try {
           const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/generalReview`, {
-            params: { appid: selectedGame.appid }, 
+            params: { appid: selectedGame.appid, name:selectedGame.name },
           });
-          setTldrData(response.data);  
+          setTldrData(response.data);
         } catch (error) {
           console.error("Failed to fetch TLDR data", error);
+        } finally {
+          fetchInProgress.current = false;
         }
       };
   
       fetchTldrData();
     } else {
-      setTldrData(null)
+      setTldrData(null);
     }
   }, [selectedGame]);
+  
 
   useEffect(() => {
     try {
