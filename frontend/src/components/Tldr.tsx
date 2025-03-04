@@ -1,6 +1,6 @@
 import { Badge } from "./ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { GameContext } from "./MyProvider";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
@@ -8,12 +8,90 @@ import { LoadingScreen } from "./LoadingScreen";
 
 const featureList: string[] = ["Filtered", "Unfiltered"];
 
+type BulletPointSummary = {
+  graphics: string;
+  gameplay: string;
+  audio: string;
+  audience: string[];
+  pc_requirements: string;
+  difficulty: string;
+  grind: string;
+  story: string;
+  game_time: string;
+  price: string;
+  bugs: string;
+};
+
+type TldrData = {
+  bullet_point_summary: BulletPointSummary;
+  pros: string;
+  cons: string;
+  notable_mentions: string;
+  grade: string;
+  bottom_line_summary: string;
+  developer_reputation: string;
+  review_weight: string;
+};
+
+interface GameContextType {
+  tldrData: TldrData;
+}
+
+const bulletPointOptions: Record<keyof BulletPointSummary, string[]> = {
+  graphics: ["You forget what reality is", "Beautiful", "Good", "Decent", "Bad", "Don't look too long at it", "Paint.exe"],
+  gameplay: ["Addictive like heroin", "Very good", "Good", "It's just gameplay", "Mehh", "Staring at walls is better", "Just don’t"],
+  audio: ["Eargasm", "Very good", "Good", "Not too bad", "Bad", "Earrape"],
+  audience: ["Kids", "Teens", "Adults", "Grandma"],
+  pc_requirements: ["Crappy laptop", "Decent", "Fast", "Rich boiiiiii", "Ask NASA if they have a spare computer"],
+  difficulty: ["Brain not required", "Easy to learn / Hard to master", "Difficult", "Dark Souls"],
+  grind: ["Nothing to grind", "Only if you care about leaderboards/ranks", "Isn't necessary to progress", "Average grind level", "Too much grind", "You'll need a second life for grinding"],
+  story: ["Text or Audio floating around", "Average", "Good", "Lovely", "It'll replace your life"],
+  game_time: ["Long enough for a cup of tea", "Short", "Average", "Long", "To infinity and beyond"],
+  price: ["Worth the price", "If you have some spare money left", "Not recommended", "You could also just burn your money"],
+  bugs: ["Never heard of", "Minor bugs", "Can get annoying","The game itself is a big terrarium for bugs"]
+};
+
 export const TldrYear = () => {
+  const { tldrData } = useContext(GameContext) as GameContextType;
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCard = () => {
     setIsOpen((prev) => !prev);
   };
+
+  const renderCheckboxes = (category: keyof BulletPointSummary) => {
+    return bulletPointOptions[category].map((option) => (
+      <div key={option} className="flex items-center gap-2">
+        <div className="w-4 h-4 border-2 border-gray-500 rounded-sm cursor-default relative flex items-center justify-center">
+          {tldrData.bullet_point_summary[category].includes(option) && (
+            <span className="text-white absolute">✓</span>
+          )}
+        </div>
+        <label>{option}</label>
+      </div>
+    ));
+  };
+
+
+  const getGradeColor = (grade: string) => {
+    switch (grade) {
+      case 'S':
+        return 'text-yellow-500';
+      case 'A':
+        return 'text-green-500'; 
+      case 'B':
+        return 'text-lightBlue-500'; 
+      case 'C':
+        return 'text-yellow-400'; 
+      case 'D':
+        return 'text-orange-500'; 
+      case 'F':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+  
 
   return (
     <>
@@ -31,47 +109,81 @@ export const TldrYear = () => {
 
         {isOpen && (
           <div className="mt-4">
+            <div className="flex justify-center mb-8">
+              <Card className="w-[30%]">
+                <CardHeader>
+                  <CardTitle className="text-center">Bullet Point Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {Object.keys(bulletPointOptions).map((category) => (
+                    <div key={category}>
+                      <h4 className="text-lg font-semibold">
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </h4>
+                      {renderCheckboxes(category as keyof BulletPointSummary)}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
               <div className="flex flex-col gap-6">
                 <Card className="mb-4">
                   <CardHeader>
-                    <CardTitle className="text-center">Bullet Point Summary</CardTitle>
+                    <CardTitle className="text-center">Pros</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {"filler."}
-                  </CardContent>
+                  <CardContent>{tldrData.pros}</CardContent>
                 </Card>
 
                 <Card className="mb-4">
                   <CardHeader>
-                    <CardTitle className="text-center">Pros</CardTitle>
+                    <CardTitle className="text-center">Confidence Rating: {tldrData.review_weight}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {"filler."}
+                    A score representing how confident the model is in its review. Smaller niche titles with fewer reviews and feedback are harder for the model to gauge effectively. Any review with a rating below a 6 should be taken with a grain of salt, and you are encouraged to do further analysis on your own.
                   </CardContent>
                 </Card>
               </div>
 
-              <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <Card className="mb-4">
                   <CardHeader>
                     <CardTitle className="text-center">Cons</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {"filler."}
-                  </CardContent>
+                  <CardContent>{tldrData.cons}</CardContent>
                 </Card>
 
                 <Card className="mb-4">
                   <CardHeader>
-                    <CardTitle className="text-center">Special Notes</CardTitle>
+                    <CardTitle className="text-center">Notable Mentions</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {"filler."}
-                  </CardContent>
+                  <CardContent className="text-center">{tldrData.notable_mentions}</CardContent>
                 </Card>
               </div>
             </div>
+
+            <Card className="mb-4">
+              <CardHeader>
+              <CardTitle className="text-center">
+                Summary Grade: 
+                <span className={`px-5 py-5 rounded ${getGradeColor(tldrData.grade)} font-bold inline`}>
+                  {tldrData.grade}
+                </span>
+              </CardTitle>
+
+              </CardHeader>
+              <CardContent>
+                {tldrData.bottom_line_summary}
+              </CardContent>
+            </Card>
+
+            <Card className="mb-4">
+              <CardHeader>
+                <CardTitle className="text-center">Developer Reputation</CardTitle>
+              </CardHeader>
+              <CardContent>{tldrData.developer_reputation}</CardContent>
+            </Card>
 
             <div className="flex flex-wrap md:justify-center gap-4 mb-8">
               {featureList.map((feature) => (
@@ -83,50 +195,26 @@ export const TldrYear = () => {
               ))}
             </div>
 
-            <Card className="mb-4">
-              <CardHeader>
-                <CardTitle className="text-center">Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {"filler."}
-              </CardContent>
-            </Card>
-
-            <Card className="mb-4">
-              <CardHeader>
-                <CardTitle className="text-center">Developer Reputation</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {"filler."}
-              </CardContent>
-            </Card>
-
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mb-8">
               <Card className="h-full mb-4">
                 <CardHeader>
                   <CardTitle className="text-center">New Card 1</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {"filler."}
-                </CardContent>
+                <CardContent>{"filler."}</CardContent>
               </Card>
 
               <Card className="h-full mb-4">
                 <CardHeader>
                   <CardTitle className="text-center">New Card 2</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {"filler."}
-                </CardContent>
+                <CardContent>{"filler."}</CardContent>
               </Card>
 
               <Card className="h-full mb-4">
                 <CardHeader>
                   <CardTitle className="text-center">New Card 3</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  {"filler"}
-                </CardContent>
+                <CardContent>{"filler"}</CardContent>
               </Card>
             </div>
           </div>
@@ -247,12 +335,12 @@ export const Tldr = () => {
       </div>
 
       {tldrData ? (
-        <div>{JSON.stringify(tldrData)}</div>
+        <TldrYear/>
       ) : (
         <LoadingScreen text="Loading results, please wait..." />
       )}
 
-      <TldrYear/>
+
     </section>
   );
 };
