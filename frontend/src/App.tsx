@@ -44,7 +44,7 @@ function App() {
   }, []);
 
   if (auth.isLoading || showLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen text="Loading, please wait..." />;
   }
 
   if (auth.error) {

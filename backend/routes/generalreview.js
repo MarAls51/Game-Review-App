@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { runWorkerTask } = require('../workers/workerManager');
 
-router.get("/tldr", async (req, res) => {
+router.get("/generalReview", async (req, res) => {
   const { appid } = req.query;
 
   if (!appid || typeof appid !== "string") {
@@ -11,6 +11,7 @@ router.get("/tldr", async (req, res) => {
 
   try {
     const result = await runWorkerTask(appid);
+
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: err.message });

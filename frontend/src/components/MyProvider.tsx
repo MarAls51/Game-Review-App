@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
+import axios from 'axios';
 
-interface game {
+interface Game {
   type: any;
   appid: any;
   name: any;
@@ -10,13 +11,15 @@ interface game {
 }
 
 interface GameContextType {
-  selectedGame: game | null;
-  setSelectedGame: (game: game | null) => void;
+  selectedGame: Game | null;
+  setSelectedGame: (game: Game | null) => void;
+  tldrData: any;
 }
 
 export const GameContext = createContext<GameContextType>({
   selectedGame: null,
   setSelectedGame: () => {},
+  tldrData: null,
 });
 
 interface GameProviderProps {
@@ -24,7 +27,7 @@ interface GameProviderProps {
 }
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-  const [selectedGame, setSelectedGame] = useState<game | null>(() => {
+  const [selectedGame, setSelectedGame] = useState<Game | null>(() => {
     try {
       const storedGame = localStorage.getItem("selectedGame");
       return storedGame ? JSON.parse(storedGame) : null;
@@ -33,6 +36,27 @@ export const GameProvider = ({ children }: GameProviderProps) => {
       return null;
     }
   });
+
+  const [tldrData, setTldrData] = useState<any>(null);
+
+  useEffect(() => {
+    if (selectedGame) {
+      const fetchTldrData = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/generalReview`, {
+            params: { appid: selectedGame.appid }, 
+          });
+          setTldrData(response.data);  
+        } catch (error) {
+          console.error("Failed to fetch TLDR data", error);
+        }
+      };
+  
+      fetchTldrData();
+    } else {
+      setTldrData(null)
+    }
+  }, [selectedGame]);
 
   useEffect(() => {
     try {
@@ -47,7 +71,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   }, [selectedGame]);
 
   return (
-    <GameContext.Provider value={{ selectedGame, setSelectedGame }}>
+    <GameContext.Provider value={{ selectedGame, setSelectedGame, tldrData }}>
       {children}
     </GameContext.Provider>
   );

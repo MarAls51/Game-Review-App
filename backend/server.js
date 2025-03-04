@@ -5,7 +5,7 @@ const cors = require("cors");
 dotenv.config();
 
 const searchRoutes = require("./routes/search");
-const tldrRoutes = require("./routes/tldr");
+const tldrRoutes = require("./routes/generalreview");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
