@@ -1,9 +1,15 @@
 import { Badge } from "./ui/badge";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useState, useContext } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { GameContext } from "./MyProvider";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa"; 
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { LoadingScreen } from "./LoadingScreen";
 
 const featureList: string[] = ["Filtered", "Unfiltered"];
@@ -38,79 +44,45 @@ interface GameContextType {
 }
 
 const bulletPointOptions: Record<keyof BulletPointSummary, string[]> = {
-  graphics: [
-    "Beautiful", 
-    "Good", 
-    "Decent", 
-    "Bad", 
-    "Terrible"
-  ],
-  gameplay: [
-    "Addictive like heroin", 
-    "Very good", 
-    "Good", 
-    "Ok", 
-    "Terrible"
-  ],
-  audio: [
-    "Eargasm", 
-    "Very good", 
-    "Good", 
-    "Not too bad", 
-    "Bad", 
-    "Earrape"
-  ],
-  audience: [
-    "Kids", 
-    "Teens", 
-    "Adults", 
-    "Grandma"
-  ],
-  pc_requirements: [
-    "Laptops can run it", 
-    "Decent", 
-    "Fast", 
-    "Quantum computer"
-  ],
-  difficulty: [
-    "Brain not required", 
-    "Casual", 
-    "Difficult", 
-    "Dark Souls"
-  ],
+  graphics: ["Beautiful", "Good", "Decent", "Bad", "Terrible"],
+  gameplay: ["Addictive like heroin", "Very good", "Good", "Ok", "Terrible"],
+  audio: ["Eargasm", "Very good", "Good", "Not too bad", "Bad", "Earrape"],
+  audience: ["Kids", "Teens", "Adults", "Grandma"],
+  pc_requirements: ["Laptops can run it", "Decent", "Fast", "Quantum computer"],
+  difficulty: ["Brain not required", "Casual", "Difficult", "Dark Souls"],
   grind: [
-    "Nothing to grind", 
-    "Only if you care about leaderboards/ranks", 
-    "Isn't necessary to progress", 
-    "Average grind level", 
-    "Too much grind"
+    "Nothing to grind",
+    "Only if you care about leaderboards/ranks",
+    "Isn't necessary to progress",
+    "Average grind level",
+    "Too much grind",
   ],
   story: [
-    "Text or Audio floating around", 
-    "Average", 
-    "Good", 
-    "Lovely", 
-    "It'll replace your life"
+    "Text or Audio floating around",
+    "Average",
+    "Good",
+    "Lovely",
+    "It'll replace your life",
   ],
   game_time: [
-    "Long enough for a cup of tea", 
-    "Short", 
-    "Average", 
-    "Long", 
-    "Replayable"
+    "Long enough for a cup of tea",
+    "Short",
+    "Average",
+    "Long",
+    "Replayable",
   ],
   price: [
-    "Worth the price", 
-    "If you have some spare money left", 
-    "Not recommended", 
-    "You could also just burn your money"
+    "Worth the price",
+    "If you have some spare money left",
+    "Not recommended",
+    "You could also just burn your money",
   ],
   bugs: [
-    "Never heard of", 
-    "Minor bugs", 
-    "Can get annoying", 
-    "The game itself is a big terrarium for bugs"
-  ]
+    "Never heard of",
+    "Minor bugs",
+    "Can get annoying",
+    "The game itself is a big terrarium for bugs",
+  ],
 };
 
 export const TldrYear = () => {
@@ -134,26 +106,24 @@ export const TldrYear = () => {
     ));
   };
 
-
   const getGradeColor = (grade: string) => {
     switch (grade) {
-      case 'S':
-        return 'text-yellow-500';
-      case 'A':
-        return 'text-green-500'; 
-      case 'B':
-        return 'text-lightBlue-500'; 
-      case 'C':
-        return 'text-yellow-400'; 
-      case 'D':
-        return 'text-orange-500'; 
-      case 'F':
-        return 'text-red-500';
+      case "S":
+        return "text-yellow-500";
+      case "A":
+        return "text-green-500";
+      case "B":
+        return "text-lightBlue-500";
+      case "C":
+        return "text-yellow-400";
+      case "D":
+        return "text-orange-500";
+      case "F":
+        return "text-red-500";
       default:
-        return 'text-gray-500';
+        return "text-gray-500";
     }
   };
-  
 
   return (
     <>
@@ -174,7 +144,9 @@ export const TldrYear = () => {
             <div className="flex justify-center mb-8">
               <Card className="w-[30%]">
                 <CardHeader>
-                  <CardTitle className="text-center">Bullet Point Summary</CardTitle>
+                  <CardTitle className="text-center">
+                    Bullet Point Summary
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {Object.keys(bulletPointOptions).map((category) => (
@@ -200,10 +172,17 @@ export const TldrYear = () => {
 
                 <Card className="mb-4">
                   <CardHeader>
-                    <CardTitle className="text-center">Confidence Rating: {tldrData.review_weight}</CardTitle>
+                    <CardTitle className="text-center">
+                      Confidence Rating: {tldrData.review_weight}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    A score representing how confident the model is in its review. Smaller niche titles with fewer reviews and feedback are harder for the model to gauge effectively. Any review with a rating below a 6 should be taken with a grain of salt, and you are encouraged to do further analysis on your own.
+                    A score representing how confident the model is in its
+                    review. Smaller niche titles with fewer reviews and feedback
+                    are harder for the model to gauge effectively. Any review
+                    with a rating below a 6 should be taken with a grain of
+                    salt, and you are encouraged to do further analysis on your
+                    own.
                   </CardContent>
                 </Card>
               </div>
@@ -218,31 +197,36 @@ export const TldrYear = () => {
 
                 <Card className="mb-4">
                   <CardHeader>
-                    <CardTitle className="text-center">Notable Mentions</CardTitle>
+                    <CardTitle className="text-center">
+                      Notable Mentions
+                    </CardTitle>
                   </CardHeader>
-                  <CardContent className="text-center">{tldrData.notable_mentions}</CardContent>
+                  <CardContent className="text-center">
+                    {tldrData.notable_mentions}
+                  </CardContent>
                 </Card>
               </div>
             </div>
 
             <Card className="mb-4">
               <CardHeader>
-              <CardTitle className="text-center">
-                Summary Grade: 
-                <span className={`px-5 py-5 rounded ${getGradeColor(tldrData.grade)} font-bold inline`}>
-                  {tldrData.grade}
-                </span>
-              </CardTitle>
-
+                <CardTitle className="text-center">
+                  Summary Grade:
+                  <span
+                    className={`px-5 py-5 rounded ${getGradeColor(tldrData.grade)} font-bold inline`}
+                  >
+                    {tldrData.grade}
+                  </span>
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                {tldrData.bottom_line_summary}
-              </CardContent>
+              <CardContent>{tldrData.bottom_line_summary}</CardContent>
             </Card>
 
             <Card className="mb-4">
               <CardHeader>
-                <CardTitle className="text-center">Developer Reputation</CardTitle>
+                <CardTitle className="text-center">
+                  Developer Reputation
+                </CardTitle>
               </CardHeader>
               <CardContent>{tldrData.developer_reputation}</CardContent>
             </Card>
@@ -293,7 +277,7 @@ export const Tldr = () => {
   const [currentScreenshotIndex, setCurrentScreenshotIndex] = useState(0);
 
   if (!selectedGame) {
-    return <LoadingScreen text="Please first select a game..."/>
+    return <LoadingScreen text="Please first select a game..." />;
   }
 
   const movies = selectedGame.movies || [];
@@ -303,7 +287,8 @@ export const Tldr = () => {
 
   const rawVideoUrl = hasMovies ? movies[currentVideoIndex]?.url : null;
   const isSteam = selectedGame.type === "steam";
-  const isYouTube = rawVideoUrl?.includes("youtube.com") || rawVideoUrl?.includes("youtu.be");
+  const isYouTube =
+    rawVideoUrl?.includes("youtube.com") || rawVideoUrl?.includes("youtu.be");
 
   const getYouTubeEmbedUrl = (url: string) => {
     const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
@@ -313,21 +298,28 @@ export const Tldr = () => {
   const videoSrc = isYouTube
     ? getYouTubeEmbedUrl(rawVideoUrl)
     : isSteam
-    ? rawVideoUrl
-    : null;
+      ? rawVideoUrl
+      : null;
 
-  const screenshotSrc = !hasMovies && hasScreenshots ? screenshots[currentScreenshotIndex]?.path_full : null;
+  const screenshotSrc =
+    !hasMovies && hasScreenshots
+      ? screenshots[currentScreenshotIndex]?.path_full
+      : null;
 
   const handleNextMedia = (next: boolean, isVideo: boolean) => {
     if (isVideo) {
       if (!hasMovies) return;
       setCurrentVideoIndex((prevIndex) =>
-        next ? (prevIndex + 1) % movies.length : (prevIndex - 1 + movies.length) % movies.length
+        next
+          ? (prevIndex + 1) % movies.length
+          : (prevIndex - 1 + movies.length) % movies.length,
       );
     } else {
       if (!hasScreenshots) return;
       setCurrentScreenshotIndex((prevIndex) =>
-        next ? (prevIndex + 1) % screenshots.length : (prevIndex - 1 + screenshots.length) % screenshots.length
+        next
+          ? (prevIndex + 1) % screenshots.length
+          : (prevIndex - 1 + screenshots.length) % screenshots.length,
       );
     }
   };
@@ -341,7 +333,8 @@ export const Tldr = () => {
         </span>
       </h2>
       <p className="text-center text-xl text-muted-foreground mt-0 mb-2">
-        This section provides a brief, concise, and accurate review of what the game has to offer for those in a hurry.
+        This section provides a brief, concise, and accurate review of what the
+        game has to offer for those in a hurry.
       </p>
       <div className="flex justify-center items-center gap-4 mb-8">
         {(hasMovies || hasScreenshots) && (
@@ -359,7 +352,11 @@ export const Tldr = () => {
           </CardHeader>
           <CardContent className="flex justify-center">
             {isSteam && videoSrc ? (
-              <video controls src={videoSrc} className="w-full h-[500px] lg:w-[800px] lg:h-[500px] rounded-lg" />
+              <video
+                controls
+                src={videoSrc}
+                className="w-full h-[500px] lg:w-[800px] lg:h-[500px] rounded-lg"
+              />
             ) : isYouTube && videoSrc ? (
               <iframe
                 src={videoSrc}
@@ -397,12 +394,10 @@ export const Tldr = () => {
       </div>
 
       {tldrData ? (
-        <TldrYear/>
+        <TldrYear />
       ) : (
         <LoadingScreen text="Loading results, please wait..." />
       )}
-
-
     </section>
   );
 };

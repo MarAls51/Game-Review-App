@@ -12,7 +12,7 @@ import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { LogoIcon } from "./Icons";
 import { Link } from "react-router-dom";
-import { GameContext } from "./MyProvider"; // Import the GameContext
+import { GameContext } from "./MyProvider";
 import { useNavigate } from "react-router-dom";
 interface RouteProps {
   href: string;
@@ -89,11 +89,10 @@ export const Navbar = () => {
     //   );
     // }
     if (requiresSelection && !selectedGame) {
-        setShowMessage(
-          "You must first select a game from the search bar to use this feature.",
-        );
-      }
-     else {
+      setShowMessage(
+        "You must first select a game from the search bar to use this feature.",
+      );
+    } else {
       setShowMessage("");
       navigate(href);
     }

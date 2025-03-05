@@ -23,7 +23,7 @@ const gameReviewSchema = new mongoose.Schema({
   grade: String,
   developer_reputation: String,
   review_weight: Number,
-  deep_dive: String
+  deep_dive: Object
 });
 
 const GameReview = mongoose.model("GameReview", gameReviewSchema);
