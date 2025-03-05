@@ -14,7 +14,8 @@ interface FAQProps {
 const FAQList: FAQProps[] = [
   {
     question: "How is my data stored?",
-    answer: "The only data collected and stored in the database are the associated accounts (steam, microsoft, etc...) that you choose to provide us to help us give you a personalized enjoyable experience if you so choose. Otherwise we don't collect any personal data.",
+    answer:
+      "The only data collected and stored in the database are the associated accounts (steam, microsoft, etc...) that you choose to provide us to help us give you a personalized enjoyable experience if you so choose. Otherwise we don't collect any personal data.",
     value: "item-1",
   },
   {
@@ -24,8 +25,7 @@ const FAQList: FAQProps[] = [
     value: "item-2",
   },
   {
-    question:
-      "What are the testimonials?",
+    question: "What are the testimonials?",
     answer:
       "If you enjoy the application and the service provided (or not) you can give your own testimonial, new testimonials are publically shared on the landing page for transparency. Testimonials are also stored so we can review and iteratively improve the service provided.",
     value: "item-3",
