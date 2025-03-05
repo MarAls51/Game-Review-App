@@ -38,17 +38,79 @@ interface GameContextType {
 }
 
 const bulletPointOptions: Record<keyof BulletPointSummary, string[]> = {
-  graphics: ["You forget what reality is", "Beautiful", "Good", "Decent", "Bad", "Don't look too long at it", "Paint.exe"],
-  gameplay: ["Addictive like heroin", "Very good", "Good", "It's just gameplay", "Mehh", "Staring at walls is better", "Just don’t"],
-  audio: ["Eargasm", "Very good", "Good", "Not too bad", "Bad", "Earrape"],
-  audience: ["Kids", "Teens", "Adults", "Grandma"],
-  pc_requirements: ["Crappy laptop", "Decent", "Fast", "Rich boiiiiii", "Ask NASA if they have a spare computer"],
-  difficulty: ["Brain not required", "Easy to learn / Hard to master", "Difficult", "Dark Souls"],
-  grind: ["Nothing to grind", "Only if you care about leaderboards/ranks", "Isn't necessary to progress", "Average grind level", "Too much grind", "You'll need a second life for grinding"],
-  story: ["Text or Audio floating around", "Average", "Good", "Lovely", "It'll replace your life"],
-  game_time: ["Long enough for a cup of tea", "Short", "Average", "Long", "To infinity and beyond"],
-  price: ["Worth the price", "If you have some spare money left", "Not recommended", "You could also just burn your money"],
-  bugs: ["Never heard of", "Minor bugs", "Can get annoying","The game itself is a big terrarium for bugs"]
+  graphics: [
+    "Beautiful", 
+    "Good", 
+    "Decent", 
+    "Bad", 
+    "Terrible"
+  ],
+  gameplay: [
+    "Addictive like heroin", 
+    "Very good", 
+    "Good", 
+    "Ok", 
+    "Terrible"
+  ],
+  audio: [
+    "Eargasm", 
+    "Very good", 
+    "Good", 
+    "Not too bad", 
+    "Bad", 
+    "Earrape"
+  ],
+  audience: [
+    "Kids", 
+    "Teens", 
+    "Adults", 
+    "Grandma"
+  ],
+  pc_requirements: [
+    "Laptops can run it", 
+    "Decent", 
+    "Fast", 
+    "Quantum computer"
+  ],
+  difficulty: [
+    "Brain not required", 
+    "Casual", 
+    "Difficult", 
+    "Dark Souls"
+  ],
+  grind: [
+    "Nothing to grind", 
+    "Only if you care about leaderboards/ranks", 
+    "Isn't necessary to progress", 
+    "Average grind level", 
+    "Too much grind"
+  ],
+  story: [
+    "Text or Audio floating around", 
+    "Average", 
+    "Good", 
+    "Lovely", 
+    "It'll replace your life"
+  ],
+  game_time: [
+    "Long enough for a cup of tea", 
+    "Short", 
+    "Average", 
+    "Long", 
+    "Replayable"
+  ],
+  price: [
+    "Worth the price", 
+    "If you have some spare money left", 
+    "Not recommended", 
+    "You could also just burn your money"
+  ],
+  bugs: [
+    "Never heard of", 
+    "Minor bugs", 
+    "Can get annoying", 
+    "The game itself is a big terrarium for bugs"
+  ]
 };
 
 export const TldrYear = () => {

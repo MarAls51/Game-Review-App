@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 dotenv.config();
 
@@ -10,6 +11,7 @@ const tldrRoutes = require("./routes/generalreview");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const CORS_ORIGIN = process.env.CORS_ORIGIN || "*"; 
+const MONGO_URI = process.env.MONGO_DB;
 
 app.use(cors({
   origin: CORS_ORIGIN,
@@ -22,8 +24,16 @@ app.use(express.json());
 app.use("/api", searchRoutes);
 app.use("/api", tldrRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`CORS allowed origin: ${CORS_ORIGIN}`);
-});
+async function startServer() {
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("Connected to MongoDB!");
 
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+  } catch (err) {
+    console.error("MongoDB Connection Error:", err);
+    process.exit(1);
+  }
+}
+
+startServer();
