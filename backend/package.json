@@ -17,6 +17,8 @@
     "express": "^4.21.2",
     "mongodb": "^6.14.2",
     "mongoose": "^8.12.1",
-    "openai": "^4.86.1"
+    "node-steam-openid": "^2.0.0",
+    "openai": "^4.86.1",
+    "steam-openid": "^1.1.1"
   }
 }
