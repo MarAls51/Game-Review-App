@@ -34,7 +34,6 @@ export const About = () => {
               <h3 className="text-2xl font-bold">Why us?</h3>
               <ul className="list-disc pl-6 mt-4 space-y-4">
                 {" "}
-                {/* Added space-y-4 here */}
                 <li>
                   <strong>Comprehensive Data Aggregation:</strong> We combine
                   reviews and data from multiple sources like Steam, YouTube,

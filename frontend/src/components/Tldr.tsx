@@ -59,6 +59,7 @@ const bulletPointOptions: Record<keyof BulletPointSummary, string[]> = {
   ],
   story: [
     "Text or Audio floating around",
+    "Some lore",
     "Average",
     "Good",
     "Lovely",

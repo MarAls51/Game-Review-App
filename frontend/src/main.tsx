@@ -9,8 +9,10 @@ import "./index.css";
 const cognitoAuthConfig = {
   authority: import.meta.env.VITE_AUTHORITY,
   client_id: import.meta.env.VITE_CLIENT_ID,
+  client_secret: import.meta.env.VITE_CLIENT_SECRET,
   redirect_uri: import.meta.env.VITE_REDIRECT_URL,
   response_type: import.meta.env.VITE_RESPONSE_TYPE,
+  post_logout_redirect_uri: import.meta.env.VITE_LOGOUT_URL,
   scope: import.meta.env.VITE_SCOPE,
 };
 
