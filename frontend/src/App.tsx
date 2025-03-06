@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; // Import necessary components for routing
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import { About } from "./components/About";
 import { Cta } from "./components/Cta";
@@ -14,25 +14,14 @@ import { Services } from "./components/Services";
 import { Team } from "./components/Team";
 import { DeepDive } from "./components/DeepDive";
 import { LoadingScreen } from "./components/LoadingScreen";
+import { Account } from "./components/Account"
+
 import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
   const auth = useAuth();
-
-  const signOutRedirect = () => {
-    const clientId = import.meta.env.VITE_CLIENT_ID;
-    const logoutUri = import.meta.env.VITE_REDIRECT_URL;
-    const cognitoDomain = import.meta.env.VITE_AUTHORITY;
-
-    if (!clientId || !logoutUri || !cognitoDomain) {
-      console.error("Cognito environment variables are missing!");
-      return;
-    }
-
-    window.location.href = `${cognitoDomain}/logout?client_id=${clientId}&logout_uri=${encodeURIComponent(logoutUri)}`;
-  };
-
+  
   const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
@@ -80,9 +69,10 @@ function App() {
         <Route path="/team" element={<Team />} />
         <Route path="/personalizedreview" element={<PersonalizedReview />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/account" element={<Account />} />
       </Routes>
 
-      <Footer />
+      {/* <Footer /> */}
       <ScrollToTop />
     </Router>
   );

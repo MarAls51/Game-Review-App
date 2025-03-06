@@ -63,7 +63,7 @@ export const Navbar = () => {
 
   const handleAuthClick = () => {
     if (auth.isAuthenticated) {
-      auth.removeUser();
+      navigate("/account");
     } else {
       auth.signinRedirect();
     }
@@ -81,13 +81,13 @@ export const Navbar = () => {
     requireLogin: boolean,
     href: string,
   ) => {
-    // if (requireLogin && !auth.isAuthenticated) {
-    //   setShowMessage("You must first login to use this feature.");
-    // } else if (requiresSelection && !selectedGame) {
-    //   setShowMessage(
-    //     "You must first select a game from the search bar to use this feature.",
-    //   );
-    // }
+    if (requireLogin && !auth.isAuthenticated) {
+      setShowMessage("You must first login to use this feature.");
+    } else if (requiresSelection && !selectedGame) {
+      setShowMessage(
+        "You must first select a game from the search bar to use this feature.",
+      );
+    }
     if (requiresSelection && !selectedGame) {
       setShowMessage(
         "You must first select a game from the search bar to use this feature.",
@@ -174,7 +174,7 @@ export const Navbar = () => {
               className={`border ${buttonVariants({ variant: "secondary" })}`}
             >
               <UserIcon className="mr-2 w-5 h-5" />
-              {auth.isAuthenticated ? "Sign Out" : "Sign In"}
+              Account
             </button>
           </div>
         </NavigationMenuList>

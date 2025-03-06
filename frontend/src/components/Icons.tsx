@@ -1,7 +1,7 @@
 export const LogoIcon = () => {
   return (
     <img
-      src="src/assets/icon.png"
+      src="/assets/icon.png"
       alt="Logo"
       width={100}
       height={100}

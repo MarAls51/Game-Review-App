@@ -116,7 +116,7 @@ export const GameCard: React.FC<GameCard> = ({ game }) => {
 
   const handleSelectClick = () => {
     if (loading) {
-      setShowMessage("You must wait for review content to be loaded before selecting another card, check the TLDR section for a review.");
+      setShowMessage("You must wait for review content to be loaded before selecting another card.");
       setTimeout(() => setShowMessage(""), 5000);
       return;
     }
