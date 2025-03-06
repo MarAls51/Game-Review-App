@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "react-oidc-context";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { LoadingScreen } from "./LoadingScreen";
-import { useNavigate } from "react-router-dom";
+import { sanitizeInput } from "./Sanitizer";
 import axios from 'axios';
 
 type ConnectedAccounts = {
@@ -15,10 +15,9 @@ type ConnectedAccounts = {
 export const Account = () => {
   const auth = useAuth();
 
-  const navigate= useNavigate();
-
   const { user } = useAuth();
   const [username, setUsername] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
   const [connectedAccounts, setConnectedAccounts] = useState<ConnectedAccounts>({
     steam: '',
     microsoft: '',
@@ -30,38 +29,53 @@ export const Account = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    if (user && !isFetching) {
       const fetchUserData = async () => {
         try {
-          const response = await axios.get(`/api/user-data?sub=${user.profile.sub}`);
-          
-          if (response.data) {
+          setIsFetching(true);
+          const response = await axios.get(
+            `${import.meta.env.VITE_BACKEND_URL}/api/user?sub=${user.profile.sub}`
+          );
+
+          if (response.status === 200 && response.data) {
             setUsername(response.data.alias || "Guest");
             setTestimonial(response.data.testimonial || "");
             setConnectedAccounts({
-              steam: response.data.steam || '',
-              microsoft: response.data.microsoft || '',
-              playstation: response.data.playstation || '',
-              epicGames: response.data.epicgames || '',
+              steam: response.data.steam || "",
+              microsoft: response.data.microsoft || "",
+              playstation: response.data.playstation || "",
+              epicGames: response.data.epicgames || "",
             });
-          } else {
-            await axios.post(`/api/user-data`, {
-              sub: user.profile.sub,
-              alias: "Guest", 
-            });
-            setUsername("Guest");
           }
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
+        } catch (error: unknown) {
+          if (axios.isAxiosError(error)) {
+            if (error.response?.status === 404) {
+              console.log("User not found, creating new user...");
+              try {
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
+                  sub: user.profile.sub,
+                  alias: "Guest",
+                });
+                setUsername("Guest");
+              } catch (postError: unknown) {
+                console.error("Failed to create user:", (postError as Error).message);
+              }
+            } else {
+              console.error("Failed to fetch user data:", error.message);
+            }
+          } else {
+            console.error("Unexpected error:", (error as Error).message);
+          }
         } finally {
+          setIsFetching(false);
           setIsLoading(false);
         }
       };
 
       fetchUserData();
     }
-  }, [user]);
-
+  }, [auth.isAuthenticated]);
+  
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
@@ -70,17 +84,31 @@ export const Account = () => {
     setTestimonial(e.target.value);
   };
 
-  const handleToggle = (account: keyof ConnectedAccounts) => {
-    setConnectedAccounts((prev) => ({
-      ...prev,
-      [account]: !prev[account],
-    }));
+  const handleToggle = async (account: keyof ConnectedAccounts) => {
+    if (account === "steam") {
+      if (connectedAccounts.steam) {
+        // If Steam is being disconnected, reset the state and backend if necessary
+        setConnectedAccounts((prev) => ({
+          ...prev,
+          steam: "",
+        }));
+        // You can add logic to disconnect the Steam account on your backend
+      } else {
+        // If Steam is being connected, redirect to the Steam login route
+        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/login`;
+      }
+    } else {
+      setConnectedAccounts((prev) => ({
+        ...prev,
+        [account]: !prev[account],
+      }));
+    }
   };
+  
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
-
 
   const handleLogout = () => {
     auth.removeUser()
@@ -88,14 +116,15 @@ export const Account = () => {
     localStorage.clear();   
     window.location.href = import.meta.env.VITE_LOGOUT_URL_FULL;
    };
-  
+
   const handleDeleteAccount = () => {
     console.log("Account deleted");
   };
 
   const updateAlias = async () => {
     try {
-      await axios.put(`/api/user-data?sub=${user?.profile.sub}`, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
+        sub: user?.profile.sub,
         alias: username,
       });
     } catch (error) {
@@ -105,8 +134,9 @@ export const Account = () => {
 
   const updateTestimonial = async () => {
     try {
-      await axios.put(`/api/user-data?sub=${user?.profile.sub}`, {
-        testimonial,
+      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
+        sub: user?.profile.sub, 
+        testimonial:sanitizeInput(testimonial),
       });
     } catch (error) {
       console.error("Failed to update testimonial:", error);
@@ -115,6 +145,7 @@ export const Account = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
+      e.preventDefault();
       if (e.target instanceof HTMLInputElement) {
         updateAlias();
       } else if (e.target instanceof HTMLTextAreaElement) {
@@ -147,10 +178,11 @@ export const Account = () => {
           </h2>
 
           <form className="space-y-8">
-            <div className="flex flex-col gap-4 items-center">
-              <label htmlFor="username" className="text-lg font-semibold text-black">
-                Username
-              </label>
+            <div className="flex flex-col items-center">
+                <label htmlFor="username" className="text-lg font-semibold text-black">
+                  Username
+                </label>
+                <p className="text-sm text-gray-500 mt-2">General alias for testimonials and future features.</p>
               <input
                 type="text"
                 id="username"
@@ -158,7 +190,8 @@ export const Account = () => {
                 onChange={handleUsernameChange}
                 onKeyDown={handleKeyPress}
                 className="mt-2 p-3 w-full md:w-[50%] border border-gray-300 rounded-2xl text-black focus:ring-2 focus:ring-black focus:outline-none"
-                placeholder="Any alias will work"
+                placeholder="Godwizard"
+                maxLength={30}
                 required
               />
             </div>
@@ -183,10 +216,11 @@ export const Account = () => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-4">
-              <label htmlFor="testimonial" className="text-lg font-semibold text-black">
-                Testimonial
-              </label>
+            <div className="flex flex-col">
+                <label htmlFor="testimonial" className="text-lg font-semibold text-black">
+                  Testimonial
+                </label>
+                <p className="text-sm text-gray-500 mt-2">This testimonial will be displayed on the landing page for everyone to see. It's sanitized but please ensure it's appropriate.</p>
               <textarea
                 id="testimonial"
                 value={testimonial}
@@ -194,6 +228,7 @@ export const Account = () => {
                 onKeyDown={handleKeyPress}
                 className="p-3 w-full border border-gray-300 rounded-lg text-black focus:ring-2 focus:ring-black focus:outline-none"
                 placeholder="Write your testimonial here"
+                maxLength={500}
                 rows={5}
               />
             </div>

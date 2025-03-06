@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../database/userSchema');
 
 
-router.get('/user-data', async (req, res) => {
+router.get('/user', async (req, res) => {
   const { sub } = req.query;
   try {
     console.log(`Fetching user data for sub: ${sub}`);
@@ -11,7 +11,7 @@ router.get('/user-data', async (req, res) => {
 
     if (!userData) {
       console.log(`User not found for sub: ${sub}`);
-      return res.status(404);
+      return res.status(404).json({ message: 'User not found' }); 
     }
 
     console.log(`User data retrieved successfully for sub: ${sub}`);
@@ -22,7 +22,8 @@ router.get('/user-data', async (req, res) => {
   }
 });
 
-router.post('/user-data', async (req, res) => {
+
+router.post('/user', async (req, res) => {
   const { sub, alias } = req.body;
   try {
     console.log(`Creating user data for sub: ${sub}, alias: ${alias}`);
@@ -45,7 +46,7 @@ router.post('/user-data', async (req, res) => {
   }
 });
 
-router.put('/user-data', async (req, res) => {
+router.put('/user', async (req, res) => {
   const { sub, alias, testimonial } = req.body;
   try {
     console.log(`Updating user data for sub: ${sub}, alias: ${alias}, testimonial: ${testimonial}`);
