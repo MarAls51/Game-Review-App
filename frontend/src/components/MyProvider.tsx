@@ -39,7 +39,6 @@ interface GameProviderProps {
 }
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-  
   const [selectedGame, setSelectedGame] = useState<Game | null>(() => {
     try {
       const storedGame = localStorage.getItem("selectedGame");
@@ -53,7 +52,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   const [tldrData, setTldrData] = useState<any>(null);
   const [personalizedReview, setPersonalizedReview] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const fetchInProgress = useRef(false);
 
@@ -67,7 +66,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
             `${import.meta.env.VITE_BACKEND_URL}/api/generalReview`,
             {
               params: { appid: selectedGame.appid, name: selectedGame.name },
-            }
+            },
           );
           setTldrData(response.data);
         } catch (error) {
@@ -122,7 +121,13 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
   return (
     <GameContext.Provider
-      value={{ selectedGame, setSelectedGame, tldrData, personalizedReview, loading }}
+      value={{
+        selectedGame,
+        setSelectedGame,
+        tldrData,
+        personalizedReview,
+        loading,
+      }}
     >
       {children}
     </GameContext.Provider>
