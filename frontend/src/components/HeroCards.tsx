@@ -14,7 +14,6 @@ import React, { useContext, useState } from "react";
 import { GameContext } from "./MyProvider.tsx";
 // import axios from "axios";
 
-
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
@@ -33,60 +32,12 @@ export const HeroLandingPageCards = () => {
           <CardHeader className="flex flex-row items-center gap-4 pb-2">
             <Avatar>
               <AvatarImage alt="" src="https://github.com/shadcn.png" />
-              <AvatarFallback>SH</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <CardTitle className="text-lg">John Doe React</CardTitle>
-              <CardDescription>@john_doe</CardDescription>
             </div>
           </CardHeader>
           <CardContent>This landing page is awesome!</CardContent>
-        </Card>
-      </SwiperSlide>
-
-      <SwiperSlide>
-        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
-          <CardHeader className="flex flex-row items-center gap-4 pb-2">
-            <Avatar>
-              <AvatarImage alt="" src="https://github.com/shadcn.png" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <CardTitle className="text-lg">Jane Doe React</CardTitle>
-              <CardDescription>@jane_doe</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>This landing page changed my workflow!</CardContent>
-        </Card>
-      </SwiperSlide>
-      <SwiperSlide>
-        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
-          <CardHeader className="flex flex-row items-center gap-4 pb-2">
-            <Avatar>
-              <AvatarImage alt="" src="https://github.com/shadcn.png" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <CardTitle className="text-lg">Jane Doe React</CardTitle>
-              <CardDescription>@jane_doe</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>This landing page changed my workflow!</CardContent>
-        </Card>
-      </SwiperSlide>
-      <SwiperSlide>
-        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
-          <CardHeader className="flex flex-row items-center gap-4 pb-2">
-            <Avatar>
-              <AvatarImage alt="" src="https://github.com/shadcn.png" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col">
-              <CardTitle className="text-lg">Jane Doe React</CardTitle>
-              <CardDescription>@jane_doe</CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>This landing page changed my workflow!</CardContent>
         </Card>
       </SwiperSlide>
     </Swiper>
@@ -116,7 +67,9 @@ export const GameCard: React.FC<GameCard> = ({ game }) => {
 
   const handleSelectClick = () => {
     if (loading) {
-      setShowMessage("You must wait for review content to be loaded before selecting another card.");
+      setShowMessage(
+        "You must wait for review content to be loaded before selecting another card.",
+      );
       setTimeout(() => setShowMessage(""), 5000);
       return;
     }
@@ -150,7 +103,9 @@ export const GameCard: React.FC<GameCard> = ({ game }) => {
       <CardHeader className="flex flex-col items-center pb-2">
         <CardTitle className="text-lg text-center">{game.name}</CardTitle>
       </CardHeader>
-      <CardContent className="text-center">{truncateDescription(game.description)}</CardContent>
+      <CardContent className="text-center">
+        {truncateDescription(game.description)}
+      </CardContent>
       <CardFooter className="flex justify-center pb-4">
         <button
           onClick={handleSelectClick}

@@ -35,7 +35,8 @@ export const DeepDive = () => {
 
       <p className="text-xl text-muted-foreground pt-4 pb-8">
         Full in-depth review with detailed explanations on what the game has to
-        offer, taken directly from steam reviws, metacritic, pc gamer and other sources.
+        offer, taken directly from steam reviws, metacritic, pc gamer and other
+        sources.
       </p>
 
       <Card className="w-4/5 mx-auto text-left">
