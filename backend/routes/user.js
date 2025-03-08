@@ -110,6 +110,15 @@ router.delete('/user', async (req, res) => {
   }
 });
 
+router.get('/user-testimonials', async (req, res) => {
+  try {
+    const users = await User.find({ testimonial: { $ne: "" } }, 'alias testimonial');
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching testimonials:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 module.exports = router;
 

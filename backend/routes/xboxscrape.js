@@ -6,7 +6,6 @@ const fs = require('fs');
 const User = require('../database/userSchema');
 
 require('dotenv').config();
-const gamesDataPath = 'games_data.json'
 
 router.get('/validate-xbox-gamertag', async (req, res) => {
   const { sub, gamerTag } = req.query;
@@ -15,6 +14,8 @@ router.get('/validate-xbox-gamertag', async (req, res) => {
     console.log('Missing required parameters: sub or gamerTag');
     return res.status(400).json({ message: 'sub and gamerTag are required' });
   }
+
+  const gamesDataPath = `games_${gamerTag}.json`
 
   try {
     console.log(`Validating Xbox gamertag: ${gamerTag} for sub: ${sub}`);
@@ -41,7 +42,7 @@ router.get('/validate-xbox-gamertag', async (req, res) => {
 
         if (!fs.existsSync(gamesDataPath)) {
           console.log('games_data.json file does not exist.');
-          return res.status(500).json({ message: 'games_data.json file not found' });
+          return res.status(500).json({ message: `${gamesDataPath} file not found` });
         }
 
         const gameData = JSON.parse(fs.readFileSync(gamesDataPath));

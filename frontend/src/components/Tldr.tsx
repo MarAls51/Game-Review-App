@@ -6,11 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import { GameContext } from "./MyProvider";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { LoadingScreen } from "./LoadingScreen";
+import axios from "axios";
 
 const featureList: string[] = ["Filtered", "Unfiltered"];
 
@@ -86,9 +87,37 @@ const bulletPointOptions: Record<keyof BulletPointSummary, string[]> = {
   ],
 };
 
+interface Metric {
+  month: string;
+  count: number;
+}
+
 export const TldrYear = () => {
   const { tldrData } = useContext(GameContext) as GameContextType;
+  const { selectedGame } = useContext(GameContext);
+  const [metricData, setMetricData] = useState<Metric[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if(tldrData){}
+    const fetchTldrData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/steam-charts`, {
+          params: {
+            appid: selectedGame?.appid,
+            name: selectedGame?.name,
+          },
+        });
+        console.log(response.data)
+        setMetricData(response.data);
+      } catch (error) {
+        console.error('Error fetching stat data:', error);
+      }
+    };
+    if(tldrData) {
+    fetchTldrData();
+    }
+  }, [tldrData]);
 
   const toggleCard = () => {
     setIsOpen((prev) => !prev);
@@ -241,29 +270,16 @@ export const TldrYear = () => {
                 </div>
               ))}
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 mb-8">
-              <Card className="h-full mb-4">
+            {selectedGame?.type == "steam" && metricData && (
+            <div className="flex justify-center mb-8">
+              <Card className="w-[40%]">
                 <CardHeader>
-                  <CardTitle className="text-center">New Card 1</CardTitle>
-                </CardHeader>
-                <CardContent>{"filler."}</CardContent>
-              </Card>
-
-              <Card className="h-full mb-4">
-                <CardHeader>
-                  <CardTitle className="text-center">New Card 2</CardTitle>
-                </CardHeader>
-                <CardContent>{"filler."}</CardContent>
-              </Card>
-
-              <Card className="h-full mb-4">
-                <CardHeader>
-                  <CardTitle className="text-center">New Card 3</CardTitle>
+                  <CardTitle className="text-center">Monthly Player Count</CardTitle>
                 </CardHeader>
                 <CardContent>{"filler"}</CardContent>
               </Card>
             </div>
+            )}
           </div>
         )}
       </div>

@@ -33,7 +33,7 @@ class XboxGamertagValidator:
                 if len(game_data) == 0:
                     sys.exit(0)
 
-                with open('games_data.json', 'w') as json_file:
+                with open(f'games_{gamertag}.json', 'w') as json_file:
                     json.dump(game_data, json_file, indent=4)
 
                 await browser.close()

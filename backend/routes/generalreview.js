@@ -58,7 +58,8 @@ function createGameReviewObject(name, reviewContent, deepDiveContent) {
         grade: reviewContent.grade,
         developer_reputation: reviewContent.developer_reputation,
         review_weight: reviewContent.review_weight,
-        deep_dive: deepDiveContent
+        deep_dive: deepDiveContent,
+        metrics:null
     });
 }
 

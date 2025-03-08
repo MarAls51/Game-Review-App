@@ -11,6 +11,7 @@ const userRoutes = require("./routes/user");
 const steamRoutes = require("./routes/steamlogin")
 const xboxRoutes = require("./routes/xboxscrape")
 const personalReviewRoutes = require("./routes/personalizedReview")
+const chartRoutes = require("./routes/chart")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,6 +32,7 @@ app.use("/api", userRoutes);
 app.use("/api", steamRoutes);
 app.use("/api", xboxRoutes)
 app.use("/api", personalReviewRoutes)
+app.use("/api", chartRoutes)
 
 async function startServer() {
   try {

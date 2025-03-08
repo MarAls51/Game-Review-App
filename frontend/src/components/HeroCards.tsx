@@ -7,39 +7,56 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-// import { useEffect, useState } from "react";
 import "swiper/css";
 import "swiper/css/autoplay";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GameContext } from "./MyProvider.tsx";
-// import axios from "axios";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
+import axios from "axios";
+
+interface Testimonial {
+  alias: string;
+  testimonial: string;
+}
 
 export const HeroLandingPageCards = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user-testimonials`);
+
+        setTestimonials(response.data);
+      } catch (error) {
+        console.error("Error fetching testimonials:", error);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   return (
-    <Swiper
-      modules={[Autoplay]}
-      slidesPerView={3}
-      loop={true}
-      className="w-full"
-    >
-      <SwiperSlide>
-        <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
-          <CardHeader className="flex flex-row items-center gap-4 pb-2">
-            <Avatar>
-              <AvatarImage alt="" src="https://github.com/shadcn.png" />
-            </Avatar>
-            <div className="flex flex-col">
-              <CardTitle className="text-lg">John Doe React</CardTitle>
-            </div>
-          </CardHeader>
-          <CardContent>This landing page is awesome!</CardContent>
-        </Card>
-      </SwiperSlide>
+    <Swiper modules={[Autoplay]} slidesPerView={3} loop={true} className="w-full">
+      {testimonials.map((user, index) => (
+        <SwiperSlide key={index}>
+          <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
+            <CardHeader className="flex flex-row items-center gap-4 pb-2">
+              <Avatar>
+                <AvatarImage alt={user.alias} src={"https://github.com/shadcn.png"} />
+              </Avatar>
+              <div className="flex flex-col">
+                <CardTitle className="text-lg">{user.alias || "Anonymous"}</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>{user.testimonial || "No testimonial available."}</CardContent>
+          </Card>
+        </SwiperSlide>
+      ))}
     </Swiper>
   );
 };
