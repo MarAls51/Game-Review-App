@@ -31,10 +31,11 @@ router.post('/user', async (req, res) => {
     const userData = new User({
       sub,
       alias: alias,
-      steam: '',
-      playstation: '',
-      epicgames: '',
-      testimonial: '',
+      xbox: {},
+      steam: {},
+      playstation: null,
+      epicgames: null,
+      testimonial: null,
     });
     
     await userData.save();
@@ -47,9 +48,10 @@ router.post('/user', async (req, res) => {
 });
 
 router.put('/user', async (req, res) => {
-  const { sub, alias, testimonial } = req.body;
+  const { sub, alias, testimonial, steam, xbox, playstation } = req.body;
+
   try {
-    console.log(`Updating user data for sub: ${sub}, alias: ${alias}, testimonial: ${testimonial}`);
+    console.log(`Updating user data for sub: ${sub}, alias: ${alias}, testimonial: ${testimonial}, steam: ${steam}, xbox: ${xbox}, playstation: ${playstation}`);
 
     let userData = await User.findOne({ sub });
 
@@ -66,6 +68,18 @@ router.put('/user', async (req, res) => {
       userData.testimonial = testimonial;
     }
 
+    if (steam !== undefined) {
+      userData.steam = steam;
+    }
+
+    if (xbox !== undefined) {
+      userData.xbox = xbox;
+    }
+
+    if (playstation !== undefined) {
+      userData.playstation = playstation;
+    }
+
     await userData.save();
     console.log(`User updated successfully for sub: ${sub}`);
     return res.json(userData);
@@ -74,6 +88,28 @@ router.put('/user', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
+router.delete('/user', async (req, res) => {
+  const { sub } = req.body;
+
+  try {
+    console.log(`Attempting to delete user with sub: ${sub}`);
+
+    const userData = await User.findOneAndDelete({ sub });
+
+    if (!userData) {
+      console.log(`User not found for sub: ${sub}`);
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    console.log(`User deleted successfully for sub: ${sub}`);
+    return res.json({ message: 'User deleted successfully', sub });
+  } catch (error) {
+    console.error(`Error deleting user for sub: ${sub}`, error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 
 module.exports = router;
 

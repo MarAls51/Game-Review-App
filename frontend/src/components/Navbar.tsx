@@ -87,8 +87,7 @@ export const Navbar = () => {
       setShowMessage(
         "You must first select a game from the search bar to use this feature.",
       );
-    }
-    if (requiresSelection && !selectedGame) {
+    } else if (requiresSelection && !selectedGame) {
       setShowMessage(
         "You must first select a game from the search bar to use this feature.",
       );

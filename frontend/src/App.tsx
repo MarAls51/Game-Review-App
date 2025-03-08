@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 import { About } from "./components/About";
-import { Cta } from "./components/Cta";
 import { Explore } from "./components/Explore";
 import { Tldr } from "./components/Tldr";
 import { Footer } from "./components/Footer";
@@ -10,18 +9,16 @@ import { HowItWorks } from "./components/HowItWorks";
 import { Navbar } from "./components/Navbar";
 import { PersonalizedReview } from "./components/PersonalizedReview";
 import { ScrollToTop } from "./components/ScrollToTop";
-import { Services } from "./components/Services";
-import { Team } from "./components/Team";
 import { DeepDive } from "./components/DeepDive";
 import { LoadingScreen } from "./components/LoadingScreen";
-import { Account } from "./components/Account"
+import { Account } from "./components/Account";
 
 import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
   const auth = useAuth();
-  
+
   const [showLoading, setShowLoading] = useState(true);
 
   useEffect(() => {
@@ -43,30 +40,13 @@ function App() {
   return (
     <Router>
       <Navbar />
-      {/* {auth.isAuthenticated ? (
-        <>
-          <button onClick={() => auth.removeUser()} className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded">
-            Sign out
-          </button>
-          <div className="p-4 bg-gray-100 rounded shadow-md">
-            <p>Welcome, {auth.user?.profile.email}!</p>
-          </div>
-        </>
-      ) : (
-        <button onClick={() => auth.signinRedirect()} className="absolute top-4 right-4 bg-blue-500 text-white px-4 py-2 rounded">
-          Sign in
-        </button>
-      )} */}
 
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/about" element={<About />} />
         <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/tldr" element={<Tldr />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/cta" element={<Cta />} />
         <Route path="/deepdive" element={<DeepDive />} />
-        <Route path="/team" element={<Team />} />
         <Route path="/personalizedreview" element={<PersonalizedReview />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/account" element={<Account />} />

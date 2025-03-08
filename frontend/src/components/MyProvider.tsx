@@ -6,6 +6,8 @@ import React, {
   useRef,
 } from "react";
 import axios from "axios";
+import { useAuth } from "react-oidc-context";
+import { Tldr } from "./Tldr";
 
 interface Game {
   type: any;
@@ -20,13 +22,15 @@ interface GameContextType {
   selectedGame: Game | null;
   setSelectedGame: (game: Game | null) => void;
   tldrData: any;
-  loading: boolean; 
+  personalizedReview: any;
+  loading: boolean;
 }
 
 export const GameContext = createContext<GameContextType>({
   selectedGame: null,
   setSelectedGame: () => {},
   tldrData: null,
+  personalizedReview: null,
   loading: false,
 });
 
@@ -35,6 +39,7 @@ interface GameProviderProps {
 }
 
 export const GameProvider = ({ children }: GameProviderProps) => {
+  
   const [selectedGame, setSelectedGame] = useState<Game | null>(() => {
     try {
       const storedGame = localStorage.getItem("selectedGame");
@@ -46,7 +51,9 @@ export const GameProvider = ({ children }: GameProviderProps) => {
   });
 
   const [tldrData, setTldrData] = useState<any>(null);
-  const [loading, setLoading] = useState(false); 
+  const [personalizedReview, setPersonalizedReview] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const {user} = useAuth();
 
   const fetchInProgress = useRef(false);
 
@@ -66,7 +73,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         } catch (error) {
           console.error("Failed to fetch TLDR data", error);
         } finally {
-          setLoading(false); 
+          setLoading(false);
           fetchInProgress.current = false;
         }
       };
@@ -90,8 +97,33 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }
   }, [selectedGame]);
 
+  // useEffect(() => {
+  //   if (!user?.profile.sub || !selectedGame || !tldrData) {
+  //     setPersonalizedReview(null);
+  //     return;
+  //   }
+
+  //   const fetchPersonalizedReview = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${import.meta.env.VITE_BACKEND_URL}/api/personalizedReview`,
+  //         {
+  //           params: { sub: user?.profile.sub, name: selectedGame.name },
+  //         }
+  //       );
+  //       setPersonalizedReview(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch personalized review", error);
+  //     }
+  //   };
+
+  //   fetchPersonalizedReview();
+  // }, [user, selectedGame, tldrData]);
+
   return (
-    <GameContext.Provider value={{ selectedGame, setSelectedGame, tldrData, loading }}>
+    <GameContext.Provider
+      value={{ selectedGame, setSelectedGame, tldrData, personalizedReview, loading }}
+    >
       {children}
     </GameContext.Provider>
   );

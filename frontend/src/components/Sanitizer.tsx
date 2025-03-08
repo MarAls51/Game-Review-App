@@ -1,5 +1,5 @@
-import { escape } from 'validator';
-import { Filter } from 'bad-words';
+import { escape } from "validator";
+import { Filter } from "bad-words";
 
 const filter = new Filter();
 
