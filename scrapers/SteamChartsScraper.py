@@ -13,7 +13,7 @@ class SteamStatScraper:
 
         try:
             async with async_playwright() as p:
-                browser = await p.chromium.launch(headless=False)
+                browser = await p.chromium.launch(headless=True)
                 page = await browser.new_page()
 
                 await page.goto(url, timeout=50000)
@@ -48,9 +48,6 @@ class SteamStatScraper:
 
                 with open(f'games_{appid}.json', 'w') as json_file:
                     json.dump(game_data, json_file, indent=4)
-
-                print("Extracted data:")
-                print(json.dumps(game_data, indent=4))
 
                 await browser.close()
 

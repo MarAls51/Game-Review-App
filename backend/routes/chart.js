@@ -29,6 +29,11 @@ router.get('/steam-charts', async (req, res) => {
       return res.status(200).json(gameStatData.metrics);
     }
 
+    if (gameStatData && gameStatData.metrics_can_scrape === false) {
+      console.log(`Scraping is disabled for ${name}, returning server error.`);
+      return res.status(500).json({ message: `Cannot scrape metrics for ${name}. Scraping is disabled.` });
+    }
+
     console.log('Scraping metrics from SteamCharts...');
     const pythonProcess = spawn(pythonPath, [scriptPath, appid]);
 
@@ -44,47 +49,94 @@ router.get('/steam-charts', async (req, res) => {
     });
 
     pythonProcess.on('close', async (code) => {
-      if (code === 1) {
-        if (gameStatData && gameStatData.metrics) {
-          console.log(`Game metrics for ${name} already exist, returning existing data.`);
-          return res.status(200).json(gameStatData.metrics);
+      try {
+        if (code === 1) {
+          console.log(`Steam metrics for ${name} have been successfully scraped`);
+
+          if (!fs.existsSync(gamesDataPath)) {
+            console.log(`JSON file ${gamesDataPath} does not exist.`);
+            return res.status(500).json({ message: 'File not found' });
+          }
+
+          const gameData = JSON.parse(fs.readFileSync(gamesDataPath));
+
+          if (!gameStatData) {
+            console.log(`No existing game metrics for ${name}. Returning error.`);
+            return res.status(404).json({ message: "Game metrics not found in the database." });
+          }
+
+          gameStatData.metrics = gameData;
+
+          await gameReviewSchema.findOneAndUpdate(
+            { name }, 
+            { $set: { metrics: gameData, metrics_can_scrape: true } },
+            { upsert: true, new: true }
+          );
+
+          console.log(`Game metrics for ${name} saved successfully`);
+
+          fs.unlinkSync(gamesDataPath);
+          console.log(`${gamesDataPath} file deleted successfully.`);
+
+          return res.status(200).json({ game: gameStatData.name, metrics: gameStatData.metrics });
+        } else {
+          console.log(`Unable to scrape ${name}'s stats`);
+
+          if (gameStatData) {
+            gameStatData.metrics_can_scrape = false;
+            await gameReviewSchema.findOneAndUpdate(
+              { name },
+              { $set: { metrics_can_scrape: false } },
+              { upsert: true, new: true }
+            );
+          }
+          return res.status(400).json({ message: 'Invalid metric data', details: pythonError });
         }
-        console.log(`Steam metrics for ${name} have been successfully scraped`);
+      } catch (err) {
+        console.error('Error processing Steam metrics:', err);
 
-        if (!fs.existsSync(gamesDataPath)) {
-          console.log(`JSON file ${gamesDataPath} does not exist.`);
-          return res.status(500).json({ message: 'File not found' });
+        if (gameStatData) {
+          gameStatData.metrics_can_scrape = false;
+          await gameReviewSchema.findOneAndUpdate(
+            { name },
+            { $set: { metrics_can_scrape: false } },
+            { upsert: true, new: true }
+          );
         }
 
-        const gameData = JSON.parse(fs.readFileSync(gamesDataPath));
-
-        if (!gameStatData) {
-          console.log(`No existing game metrics for ${name}. Returning error.`);
-          return res.status(404).json({ message: "Game metrics not found in the database." });
-        }
-
-        gameStatData.metrics = gameData;
-
-        await gameStatData.save();
-
-        console.log(`Game metrics for ${name} saved successfully`);
-
-        fs.unlinkSync(gamesDataPath);
-        console.log(`${gamesDataPath} file deleted successfully.`);
-
-        return res.status(200).json({ game: gameStatData.name, metrics: gameStatData.metrics });
-      } else {
-        console.log(`Unable to scrape ${name}'s stats`);
-        return res.status(400).json({ message: 'Invalid metric data', details: pythonError });
+        res.status(500).json({ message: 'Error processing game metrics', error: err.message });
       }
     });
 
-    pythonProcess.on('error', (err) => {
+    pythonProcess.on('error', async (err) => {
       console.error(`Error executing Python script:`, err);
+
+      if (gameStatData) {
+        gameStatData.metrics_can_scrape = false;
+        await gameReviewSchema.findOneAndUpdate(
+          { name },
+          { $set: { metrics_can_scrape: false } },
+          { upsert: true, new: true }
+        );
+      }
+
       res.status(500).json({ message: 'Failed to execute Python script', error: err.message });
     });
   } catch (error) {
     console.error(`Error validating ${name}`, error);
+
+    if (!gameStatData) {
+      gameStatData = new gameReviewSchema({ name, metrics_can_scrape: false });
+    } else {
+      gameStatData.metrics_can_scrape = false;
+    }
+
+    await gameReviewSchema.findOneAndUpdate(
+      { name },
+      { $set: { metrics_can_scrape: false } },
+      { upsert: true, new: true }
+    );
+
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });

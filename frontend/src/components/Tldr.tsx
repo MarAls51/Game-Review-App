@@ -12,6 +12,15 @@ import { GameContext } from "./MyProvider";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { LoadingScreen } from "./LoadingScreen";
 import axios from "axios";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
 const featureList: string[] = ["Filtered", "Unfiltered"];
 
@@ -97,31 +106,37 @@ export const TldrYear = () => {
   const { selectedGame } = useContext(GameContext);
   const [metricData, setMetricData] = useState<Metric[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [statStatus, setStatStatus] = useState(true);
 
   useEffect(() => {
-    if(tldrData){}
+    if (!selectedGame) return;
+
     const fetchTldrData = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/steam-charts`, {
-          params: {
-            appid: selectedGame?.appid,
-            name: selectedGame?.name,
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/steam-charts`,
+          {
+            params: {
+              appid: selectedGame?.appid,
+              name: selectedGame?.name,
+            },
           },
-        });
-        console.log(response.data)
+        );
         setMetricData(response.data);
       } catch (error) {
-        console.error('Error fetching stat data:', error);
+        setStatStatus(false);
+        console.error("Error fetching stat data:", error);
       }
     };
-    if(tldrData) {
+
     fetchTldrData();
-    }
-  }, [tldrData]);
+  }, [selectedGame]);
 
   const toggleCard = () => {
     setIsOpen((prev) => !prev);
   };
+
+  console.log(metricData);
 
   const renderCheckboxes = (category: keyof BulletPointSummary) => {
     return bulletPointOptions[category].map((option) => (
@@ -260,26 +275,68 @@ export const TldrYear = () => {
               </CardHeader>
               <CardContent>{tldrData.developer_reputation}</CardContent>
             </Card>
-
-            <div className="flex flex-wrap md:justify-center gap-4 mb-8">
-              {featureList.map((feature) => (
-                <div key={feature} className="p-2 rounded-lg">
-                  <Badge variant="secondary" className="text-sm">
-                    {feature}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-            {selectedGame?.type == "steam" && metricData && (
             <div className="flex justify-center mb-8">
-              <Card className="w-[40%]">
-                <CardHeader>
-                  <CardTitle className="text-center">Monthly Player Count</CardTitle>
-                </CardHeader>
-                <CardContent>{"filler"}</CardContent>
+              <Card className="w-[40%] h-[10%]">
+                {statStatus === false ? (
+                  <>
+                    <CardHeader>
+                      <CardTitle className="text-center">
+                        Monthly Player Count
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-center">
+                        Unable to get stats at this time.
+                      </p>
+                    </CardContent>
+                  </>
+                ) : selectedGame?.type === "steam" && metricData.length > 0 ? (
+                  <>
+                    <CardHeader>
+                      <CardTitle className="text-center">
+                        Monthly Player Count
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <LineChart
+                          data={metricData
+                            .slice()
+                            .reverse()
+                            .map((d) => ({ ...d, count: Math.round(d.count) }))}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="month" />
+                          <YAxis
+                            tickFormatter={(value) => value.toLocaleString()}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "#1E293B",
+                              borderColor: "#34D399",
+                            }}
+                            labelStyle={{
+                              color: "#34D399",
+                              fontWeight: "bold",
+                            }}
+                            itemStyle={{ color: "white" }}
+                            formatter={(value) => value.toLocaleString()}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="count"
+                            stroke="#34D399"
+                            strokeWidth={2}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </CardContent>
+                  </>
+                ) : (
+                  <LoadingScreen text="Loading stats, please wait..." />
+                )}
               </Card>
             </div>
-            )}
           </div>
         )}
       </div>

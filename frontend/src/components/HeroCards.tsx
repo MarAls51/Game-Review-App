@@ -29,7 +29,9 @@ export const HeroLandingPageCards = () => {
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/user-testimonials`);
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/user-testimonials`,
+        );
 
         setTestimonials(response.data);
       } catch (error) {
@@ -41,19 +43,31 @@ export const HeroLandingPageCards = () => {
   }, []);
 
   return (
-    <Swiper modules={[Autoplay]} slidesPerView={3} loop={true} className="w-full">
+    <Swiper
+      modules={[Autoplay]}
+      slidesPerView={3}
+      loop={true}
+      className="w-full"
+    >
       {testimonials.map((user, index) => (
         <SwiperSlide key={index}>
           <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
             <CardHeader className="flex flex-row items-center gap-4 pb-2">
               <Avatar>
-                <AvatarImage alt={user.alias} src={"https://github.com/shadcn.png"} />
+                <AvatarImage
+                  alt={user.alias}
+                  src={"https://github.com/shadcn.png"}
+                />
               </Avatar>
               <div className="flex flex-col">
-                <CardTitle className="text-lg">{user.alias || "Anonymous"}</CardTitle>
+                <CardTitle className="text-lg">
+                  {user.alias || "Anonymous"}
+                </CardTitle>
               </div>
             </CardHeader>
-            <CardContent>{user.testimonial || "No testimonial available."}</CardContent>
+            <CardContent>
+              {user.testimonial || "No testimonial available."}
+            </CardContent>
           </Card>
         </SwiperSlide>
       ))}

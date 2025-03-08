@@ -24,7 +24,8 @@ const gameReviewSchema = new mongoose.Schema({
   developer_reputation: String,
   review_weight: Number,
   deep_dive: Object,
-  metrics: Object
+  metrics: Object,
+  metrics_can_scrape: Boolean
 });
 
 const GameReview = mongoose.model("GameReview", gameReviewSchema);

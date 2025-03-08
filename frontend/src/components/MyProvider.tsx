@@ -96,28 +96,28 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }
   }, [selectedGame]);
 
-  // useEffect(() => {
-  //   if (!user?.profile.sub || !selectedGame || !tldrData) {
-  //     setPersonalizedReview(null);
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!user?.profile.sub || !selectedGame || !tldrData) {
+      setPersonalizedReview(null);
+      return;
+    }
 
-  //   const fetchPersonalizedReview = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${import.meta.env.VITE_BACKEND_URL}/api/personalizedReview`,
-  //         {
-  //           params: { sub: user?.profile.sub, name: selectedGame.name },
-  //         }
-  //       );
-  //       setPersonalizedReview(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch personalized review", error);
-  //     }
-  //   };
+    const fetchPersonalizedReview = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/personalizedReview`,
+          {
+            params: { sub: user?.profile.sub, name: selectedGame.name },
+          }
+        );
+        setPersonalizedReview(response.data);
+      } catch (error) {
+        console.error("Failed to fetch personalized review", error);
+      }
+    };
 
-  //   fetchPersonalizedReview();
-  // }, [user, selectedGame, tldrData]);
+    fetchPersonalizedReview();
+  }, [user, selectedGame, tldrData]);
 
   return (
     <GameContext.Provider
