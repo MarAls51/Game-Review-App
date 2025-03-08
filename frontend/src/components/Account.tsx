@@ -3,7 +3,7 @@ import { useAuth } from "react-oidc-context";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { LoadingScreen } from "./LoadingScreen";
 import { sanitizeInput } from "./Sanitizer";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import axios from "axios";
 
 type ConnectedAccounts = {
@@ -21,7 +21,7 @@ const AccountForm = ({
   connectedAccounts,
   handleToggle,
   toggleDropdown,
-  isDropdownOpen
+  isDropdownOpen,
 }: any) => {
   const updateAlias = async () => {
     try {
@@ -151,8 +151,8 @@ const AccountForm = ({
               Your connected platform accounts are only used to personalize your
               reviews and explore features, and you can remove them at any time.
               Your email and login credentials are securely stored separately
-              from the database to ensure your safety and privacy. All
-              data extracted from your connected accounts consists of publicly
+              from the database to ensure your safety and privacy. All data
+              extracted from your connected accounts consists of publicly
               available information, such as your game library and playtime
               history. We do not collect or store any personal information that
               could be used to identify you.
@@ -191,7 +191,8 @@ export const Account = () => {
   const [testimonial, setTestimonial] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isXboxPopupOpen, setIsXboxPopupOpen] = useState(false);
-  const [isDeleteAccountPopupOpen, setisDeleteAccountPopupOpen] = useState(false);
+  const [isDeleteAccountPopupOpen, setisDeleteAccountPopupOpen] =
+    useState(false);
   const [xboxGamerTag, setXboxGamerTag] = useState("");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -262,7 +263,7 @@ export const Account = () => {
           ...prev,
           steam: "",
         }));
-  
+
         await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
           sub: user?.profile.sub,
           steam: null,
@@ -277,7 +278,7 @@ export const Account = () => {
         ...prev,
         microsoft: "",
       }));
-  
+
       await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
         sub: user?.profile.sub,
         xbox: null,
@@ -289,7 +290,7 @@ export const Account = () => {
       }));
     }
   };
-  
+
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
   };
@@ -303,15 +304,17 @@ export const Account = () => {
 
   const handleDeleteAccount = async () => {
     try {
-        await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
-          data: { sub: user?.profile.sub },
-        });
-        auth.removeUser();
-        sessionStorage.clear();
-        localStorage.clear();
-        window.location.href = import.meta.env.VITE_LOGOUT_URL_FULL;
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
+        data: { sub: user?.profile.sub },
+      });
+      auth.removeUser();
+      sessionStorage.clear();
+      localStorage.clear();
+      window.location.href = import.meta.env.VITE_LOGOUT_URL_FULL;
     } catch (error) {
-      toast.error("An error occurred while deleting your account. Please try again.");
+      toast.error(
+        "An error occurred while deleting your account. Please try again.",
+      );
     }
   };
 
@@ -324,7 +327,7 @@ export const Account = () => {
     try {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/validate-xbox-gamertag`,
-        { params: { sub: user?.profile.sub , gamerTag: xboxGamerTag } },
+        { params: { sub: user?.profile.sub, gamerTag: xboxGamerTag } },
       );
 
       if (response.status === 200 && response.data.isValid) {
@@ -334,16 +337,15 @@ export const Account = () => {
         }));
         setIsXboxPopupOpen(false);
       } else {
-        toast.error("Invalid Xbox Gamer Tag"); 
+        toast.error("Invalid Xbox Gamer Tag");
       }
     } catch (error) {
       console.error("Error validating Xbox Gamer Tag:", error);
-      setErrorMessage("There was an error. Please try again."); 
+      setErrorMessage("There was an error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
 
   return (
     <section
@@ -374,11 +376,11 @@ export const Account = () => {
             onClick={() => setisDeleteAccountPopupOpen(true)}
             className="bg-red-600 text-white px-6 py-3 rounded-lg"
           >
-          Delete Account
+            Delete Account
           </button>
         </div>
       </div>
-  
+
       {isXboxPopupOpen && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
           {isSubmitting ? (
@@ -415,37 +417,38 @@ export const Account = () => {
                 </button>
               </div>
               {errorMessage && (
-                <p className="text-red-500 mt-4">{errorMessage}</p> 
+                <p className="text-red-500 mt-4">{errorMessage}</p>
               )}
             </div>
           )}
         </div>
       )}
       {isDeleteAccountPopupOpen && (
-          <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-             <div className="bg-white p-6 rounded-lg w-80 text-center">
-                  <h3 className="text-xl font-semibold text-black">
-                      Are you sure you want to delete your account? Your login details will still be stored for a 30-day period before permanent deleted.
-                  </h3>
-                  <div className="mt-4 flex gap-2">
-                    <button
-                      onClick={() => setisDeleteAccountPopupOpen(false)}
-                      className="bg-black text-white p-2 rounded-lg w-full"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleDeleteAccount}
-                      className="bg-red-500 text-white p-2 rounded-lg w-full"
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                  {errorMessage && (
-                    <p className="text-red-500 mt-4">{errorMessage}</p> 
-                  )}
-                </div>
-            </div> 
+        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg w-80 text-center">
+            <h3 className="text-xl font-semibold text-black">
+              Are you sure you want to delete your account? Your login details
+              will still be stored for a 30-day period before permanent deleted.
+            </h3>
+            <div className="mt-4 flex gap-2">
+              <button
+                onClick={() => setisDeleteAccountPopupOpen(false)}
+                className="bg-black text-white p-2 rounded-lg w-full"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                className="bg-red-500 text-white p-2 rounded-lg w-full"
+              >
+                Confirm
+              </button>
+            </div>
+            {errorMessage && (
+              <p className="text-red-500 mt-4">{errorMessage}</p>
+            )}
+          </div>
+        </div>
       )}
     </section>
   );
