@@ -1,13 +1,19 @@
 const axios = require("axios");
+const logger = require('../utils/logger');
 
 async function searchSteamGames(query) {
   try {
+    logger.info(`Searching for Steam games with query: ${query}`);
+
     const searchResponse = await axios.get(
       `https://steamcommunity.com/actions/SearchApps/${query}`
     );
     const searchResults = searchResponse.data.slice(0, 5);
 
-    if (searchResults.length === 0) return [];
+    if (searchResults.length === 0) {
+      logger.warn("No Steam games found for the query.");
+      return [];
+    }
 
     const appIDs = searchResults.map((app) => app.appid);
 
@@ -36,7 +42,7 @@ async function searchSteamGames(query) {
         : [],
     }));
   } catch (error) {
-    console.error("Error searching Steam games:", error);
+    logger.error("Error searching Steam games:", error);
     return [];
   }
 }

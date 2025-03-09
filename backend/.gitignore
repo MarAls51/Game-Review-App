@@ -8,3 +8,7 @@ node_modules/
 workers/scrapers/env/
 
 routes/const.js
+
+logger/
+
+utils/logs

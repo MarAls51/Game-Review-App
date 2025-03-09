@@ -1,14 +1,17 @@
 import sys
 import asyncio
 import json
+from logger import get_logger
 from playwright.async_api import async_playwright
+
+logger = get_logger()
 
 class XboxGamertagValidator:
     def __init__(self):
         self.url = "https://xboxgamertag.com/search/{gamertag}"
 
     async def validate_gamertag(self, gamertag):
-        print(f"Validating gamertag: {gamertag}")
+        logger.info(f"Validating gamertag: {gamertag}")
         url = self.url.format(gamertag=gamertag)
 
         try:
@@ -29,19 +32,21 @@ class XboxGamertagValidator:
                         'title': game_title,
                         'progress': progress
                     })
-                
+
                 if len(game_data) == 0:
+                    logger.info("No game data found. Exiting.")
                     sys.exit(0)
 
                 with open(f'games_{gamertag}.json', 'w') as json_file:
                     json.dump(game_data, json_file, indent=4)
+                    logger.info(f"Game data for {gamertag} saved to 'games_{gamertag}.json'")
 
                 await browser.close()
 
                 sys.exit(1)
 
         except Exception as e:
-            sys.stderr.write(f"Error validating gamertag: {e}\n")
+            logger.error(f"Error validating gamertag: {e}")
             sys.exit(0)
 
     def run(self, gamertag):
@@ -49,7 +54,7 @@ class XboxGamertagValidator:
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        sys.stderr.write("Usage: python MicrosoftScraper.py <gamertag>\n")
+        logger.error("Usage: python MicrosoftScraper.py <gamertag>")
         sys.exit(1)
 
     gamertag = sys.argv[1]

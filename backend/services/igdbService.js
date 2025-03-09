@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { getTwitchAccessToken } = require("./twitchService");
+const logger = require('../utils/logger');
 
 const TWITCH_CLIENT_KEY = process.env.TWITCH_CLIENT_KEY;
 
@@ -34,7 +35,7 @@ async function searchIGDBGames(query, accessToken) {
         : [],
     }));
   } catch (error) {
-    console.error("Error searching IGDB games:", error);
+    logger.error(`Error searching IGDB games: ${error.message}`);
     return [];
   }
 }

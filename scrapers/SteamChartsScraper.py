@@ -2,13 +2,15 @@ import sys
 import asyncio
 import json
 from playwright.async_api import async_playwright
+from logger import get_logger
 
 class SteamStatScraper:
     def __init__(self):
         self.url = "https://steamcharts.com/app/{appid}"
+        self.logger = get_logger()
 
     async def validate_gamertag(self, appid):
-        print(f"appid: {appid}")
+        self.logger.info(f"Starting extraction for appid: {appid}")
         url = self.url.format(appid=appid)
 
         try:
@@ -22,42 +24,43 @@ class SteamStatScraper:
 
                 rows = await page.query_selector_all('.odd')
 
-
                 game_data = []
                 for row in rows:
                     cells = await row.query_selector_all('td')
 
-                    if len(cells) >= 2:  
-                        month_text = await cells[0].inner_text() 
-                        count_text = await cells[1].inner_text() 
+                    if len(cells) >= 2:
+                        month_text = await cells[0].inner_text()
+                        count_text = await cells[1].inner_text()
 
                         try:
-                            count_value = float(count_text.replace(',', '').strip()) 
+                            count_value = float(count_text.replace(',', '').strip())
                         except ValueError:
-                            continue 
+                            continue
 
                         game_data.append({
                             'month': month_text,
                             'count': count_value
                         })
 
-
                 if len(game_data) == 0:
-                    print("No data found for this appid.")
+                    self.logger.warning("No data found for this appid.")
                     sys.exit(0)
 
                 with open(f'games_{appid}.json', 'w') as json_file:
                     json.dump(game_data, json_file, indent=4)
+
+                self.logger.info(f"Successfully extracted stats for appid {appid}")
 
                 await browser.close()
 
                 sys.exit(1)
 
         except Exception as e:
-            sys.stderr.write(f"Error extracting stats: {e}\n")
+            self.logger.error(f"Error extracting stats for appid {appid}: {e}")
             sys.exit(0)
 
     def run(self, appid):
+        self.logger.info("Running SteamStatScraper")
         asyncio.run(self.validate_gamertag(appid))
 
 if __name__ == '__main__':

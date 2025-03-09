@@ -5,6 +5,7 @@ import datetime
 import sys
 import re
 import os
+from logger import get_logger
 
 class SteamReviewScraper:
     BASE_URL = "https://store.steampowered.com/appreviews/{appid}?json=1&num_per_page=100&start_offset={offset}&filter=all&day_range=365"
@@ -16,6 +17,7 @@ class SteamReviewScraper:
         self.MIN_UPVOTES = min_upvotes
         self.MIN_FUNNY_UPVOTES = min_funny_upvotes
         self.MAX_CHARS = max_chars
+        self.logger = get_logger()
 
     def clean_text(self, text):
         """
@@ -26,7 +28,6 @@ class SteamReviewScraper:
         cleaned_text = re.sub(r'[-]', '', cleaned_text)
 
         return cleaned_text.strip()
-
 
     def get_reviews_for_game(self, appid):
         all_reviews = []
@@ -40,26 +41,27 @@ class SteamReviewScraper:
             try:
                 response = requests.get(url)
             except requests.exceptions.RequestException as e:
-                sys.stderr.write(f"Request failed: {str(e)}\n")
+                self.logger.error(f"Request failed: {str(e)}")
                 return
 
             if response.status_code == 429:
                 retry_after = int(response.headers.get("Retry-After", 5))
+                self.logger.warning(f"Rate limited. Retrying after {retry_after} seconds.")
                 time.sleep(retry_after)
                 continue
 
             if response.status_code != 200:
-                sys.stderr.write(f"Error fetching reviews: {response.status_code}\n")
+                self.logger.error(f"Error fetching reviews: {response.status_code}")
                 return
 
             try:
                 data = response.json()
             except json.JSONDecodeError as e:
-                sys.stderr.write(f"Error parsing JSON response: {str(e)}\n")
+                self.logger.error(f"Error parsing JSON response: {str(e)}")
                 return
 
             if not data.get('success'):
-                sys.stderr.write(f"Failed to fetch reviews: {data}\n")
+                self.logger.error(f"Failed to fetch reviews: {data}")
                 return
 
             reviews = data.get('reviews', [])
@@ -93,7 +95,7 @@ class SteamReviewScraper:
                         total_char += review_length
 
                     if total_char >= self.MAX_CHARS:
-                        print(f"Reached {self.MAX_CHARS} characters, stopping review collection.")
+                        self.logger.info(f"Reached {self.MAX_CHARS} characters, stopping review collection.")
                         break
 
             if formatted_reviews:
@@ -114,12 +116,13 @@ class SteamReviewScraper:
                 json.dump(reviews_data, f)
                 f.flush()
                 os.fsync(f.fileno())
-            print(f"Successfully wrote JSON file: {self.output_file}")
+            self.logger.info(f"Successfully wrote JSON file: {self.output_file}")
         except Exception as e:
-            sys.stderr.write(f"Error writing JSON file: {str(e)}\n")
+            self.logger.error(f"Error writing JSON file: {str(e)}")
             return
 
     def run(self, appid):
+        self.logger.info(f"Starting review collection for appid: {appid}")
         self.get_reviews_for_game(appid)
 
 if __name__ == '__main__':
