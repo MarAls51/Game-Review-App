@@ -1,168 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "react-oidc-context";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { LoadingScreen } from "./LoadingScreen";
-import { sanitizeInput } from "./Sanitizer";
+import { LoadingScreen } from "../components/LoadingScreen";
+import { sanitizeInput } from "../components/Sanitizer";
 import { toast } from "react-toastify";
 import axios from "axios";
-
-type ConnectedAccounts = {
-  steam: string;
-  microsoft: string;
-  playstation: string;
-};
-
-const AccountForm = ({
-  user,
-  username,
-  handleUsernameChange,
-  testimonial,
-  handleTestimonialChange,
-  connectedAccounts,
-  handleToggle,
-  toggleDropdown,
-  isDropdownOpen,
-}: any) => {
-  const updateAlias = async () => {
-    try {
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
-        sub: user?.profile.sub,
-        alias: username,
-      });
-    } catch (error) {
-      console.error("Failed to update alias:", error);
-    }
-  };
-
-  const updateTestimonial = async () => {
-    try {
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
-        sub: user?.profile.sub,
-        testimonial: sanitizeInput(testimonial),
-      });
-    } catch (error) {
-      console.error("Failed to update testimonial:", error);
-    }
-  };
-  const handleKeyPress = (
-    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      if (e.target instanceof HTMLInputElement) {
-        updateAlias();
-      } else if (e.target instanceof HTMLTextAreaElement) {
-        updateTestimonial();
-      }
-    }
-  };
-  return (
-    <form className="space-y-8">
-      <div className="flex flex-col items-center">
-        <label htmlFor="username" className="text-lg font-semibold text-black">
-          Username
-        </label>
-        <p className="text-sm text-gray-500 mt-2">
-          General alias for testimonials and future features.
-        </p>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={handleUsernameChange}
-          onKeyDown={handleKeyPress}
-          className="mt-2 p-3 w-full md:w-[50%] border border-gray-300 rounded-2xl text-black focus:ring-2 focus:ring-black focus:outline-none"
-          placeholder="Godwizard"
-          maxLength={30}
-          required
-        />
-      </div>
-
-      {Object.keys(connectedAccounts).map((account) => (
-        <div key={account} className="flex items-center justify-between mb-4">
-          <span className="text-black capitalize">{account}</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input
-              type="checkbox"
-              checked={!!connectedAccounts[account as keyof ConnectedAccounts]}
-              onChange={() => handleToggle(account as keyof ConnectedAccounts)}
-              className="sr-only"
-            />
-            <span
-              className={`w-10 h-5 rounded-full relative transition-colors 
-                ${
-                  connectedAccounts[account as keyof ConnectedAccounts]
-                    ? "bg-blue-500"
-                    : "bg-gray-300"
-                }`}
-            >
-              <span
-                className={`absolute left-1 top-1 w-3 h-3 bg-white rounded-full transition-transform
-                  ${
-                    connectedAccounts[account as keyof ConnectedAccounts]
-                      ? "translate-x-5"
-                      : "translate-x-0"
-                  }`}
-              ></span>
-            </span>
-          </label>
-        </div>
-      ))}
-
-      <div className="flex flex-col">
-        <label
-          htmlFor="testimonial"
-          className="text-lg font-semibold text-black"
-        >
-          Testimonial
-        </label>
-        <p className="text-sm text-gray-500 mt-2">
-          This testimonial will be displayed on the landing page for everyone to
-          see. It's sanitized but please ensure it's appropriate.
-        </p>
-        <textarea
-          id="testimonial"
-          value={testimonial}
-          onChange={handleTestimonialChange}
-          onKeyDown={handleKeyPress}
-          className="p-3 w-full border border-gray-300 rounded-lg text-black focus:ring-2 focus:ring-black focus:outline-none"
-          placeholder="Write your testimonial here"
-          maxLength={500}
-          rows={5}
-        />
-      </div>
-
-      <div className="flex flex-col gap-4">
-        <button
-          type="button"
-          onClick={toggleDropdown}
-          className="flex justify-between items-center text-lg font-semibold text-black bg-gray-200 p-3 rounded-lg w-full text-left"
-        >
-          How do you use my data?
-          {isDropdownOpen ? (
-            <FaChevronUp className="text-xl" />
-          ) : (
-            <FaChevronDown className="text-xl" />
-          )}
-        </button>
-        {isDropdownOpen && (
-          <div className="bg-gray-100 p-4 rounded-lg mt-2 text-black relative">
-            <p>
-              Your connected platform accounts are only used to personalize your
-              reviews and explore features, and you can remove them at any time.
-              Your email and login credentials are securely stored separately
-              from the database to ensure your safety and privacy. All data
-              extracted from your connected accounts consists of publicly
-              available information, such as your game library and playtime
-              history. We do not collect or store any personal information that
-              could be used to identify you.
-            </p>
-          </div>
-        )}
-      </div>
-    </form>
-  );
-};
+import { ConnectedAccounts } from "@/types/types";
+import { AccountForm } from "@/components/AccountForm";
+import { createUser, deleteUser, fetchUser, steamRedirect, updateUser, validateXboxGamertag } from "@/services/apiService";
 
 const AccountHeader = ({ handleLogout }: any) => {
   return (
@@ -201,16 +45,14 @@ export const Account = () => {
       const fetchUserData = async () => {
         try {
           setIsFetching(true);
-          const response = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/api/user?sub=${user.profile.sub}`,
-          );
-          if (response.status === 200 && response.data) {
-            setUsername(response.data.alias || "Anonymous");
-            setTestimonial(response.data.testimonial || "");
+          const data = await fetchUser(user?.profile.sub)
+          if (data) {
+            setUsername(data.alias || "Anonymous");
+            setTestimonial(data.testimonial || "");
             setConnectedAccounts({
-              steam: response.data.steam?.steamid || "",
-              microsoft: response.data.xbox?.xboxGamertag || "",
-              playstation: response.data.playstation || "",
+              steam: data.steam?.steamid || "",
+              microsoft: data.xbox?.xboxGamertag || "",
+              playstation: data.playstation || "",
             });
           }
         } catch (error: unknown) {
@@ -218,13 +60,7 @@ export const Account = () => {
             if (error.response?.status === 404) {
               console.log("User not found, creating new user...");
               try {
-                await axios.post(
-                  `${import.meta.env.VITE_BACKEND_URL}/api/user`,
-                  {
-                    sub: user.profile.sub,
-                    alias: "Anonymous",
-                  },
-                );
+                await createUser(user?.profile.sub)
                 setUsername("Anonymous");
               } catch (postError: unknown) {
                 console.error(
@@ -264,12 +100,9 @@ export const Account = () => {
           steam: "",
         }));
 
-        await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
-          sub: user?.profile.sub,
-          steam: null,
-        });
+        await updateUser(user?.profile.sub, {steam:null})
       } else {
-        window.location.href = `${import.meta.env.VITE_BACKEND_URL}/api/login?sub=${user?.profile.sub}`;
+        window.location.href = steamRedirect(user?.profile.sub)
       }
     } else if (account === "microsoft" && !connectedAccounts.microsoft) {
       setIsXboxPopupOpen(true);
@@ -279,10 +112,7 @@ export const Account = () => {
         microsoft: "",
       }));
 
-      await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
-        sub: user?.profile.sub,
-        xbox: null,
-      });
+      await updateUser(user?.profile.sub, {xbox: null})
     } else {
       setConnectedAccounts((prev) => ({
         ...prev,
@@ -304,9 +134,7 @@ export const Account = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/user`, {
-        data: { sub: user?.profile.sub },
-      });
+      await deleteUser(user?.profile.sub)
       auth.removeUser();
       sessionStorage.clear();
       localStorage.clear();
@@ -325,23 +153,18 @@ export const Account = () => {
     setErrorMessage("");
     setXboxGamerTag(sanitizeInput(xboxGamerTag));
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/validate-xbox-gamertag`,
-        { params: { sub: user?.profile.sub, gamerTag: xboxGamerTag } },
-      );
-
-      if (response.status === 200 && response.data.isValid) {
+      const response = await validateXboxGamertag(user?.profile.sub, xboxGamerTag )
+      if (response === true) {
         setConnectedAccounts((prev) => ({
           ...prev,
           microsoft: xboxGamerTag,
         }));
         setIsXboxPopupOpen(false);
       } else {
-        toast.error("Invalid Xbox Gamer Tag");
+        setErrorMessage("There was an error. Please try again.");
       }
     } catch (error) {
       console.error("Error validating Xbox Gamer Tag:", error);
-      setErrorMessage("There was an error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

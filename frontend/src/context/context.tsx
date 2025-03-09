@@ -1,30 +1,7 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  ReactNode,
-  useRef,
-} from "react";
-import axios from "axios";
+import React, { createContext, useState, useEffect, ReactNode, useRef } from "react";
 import { useAuth } from "react-oidc-context";
-import { Tldr } from "./Tldr";
-
-interface Game {
-  type: any;
-  appid: any;
-  name: any;
-  description: any;
-  screenshots: any;
-  movies: any;
-}
-
-interface GameContextType {
-  selectedGame: Game | null;
-  setSelectedGame: (game: Game | null) => void;
-  tldrData: any;
-  personalizedReview: any;
-  loading: boolean;
-}
+import { fetchTldrData, fetchPersonalizedReview } from "../services/apiService";
+import { Game, GameContextType, TldrData } from "../types/types";
 
 export const GameContext = createContext<GameContextType>({
   selectedGame: null,
@@ -39,6 +16,12 @@ interface GameProviderProps {
 }
 
 export const GameProvider = ({ children }: GameProviderProps) => {
+  const [tldrData, setTldrData] = useState<TldrData | null>(null);
+  const [personalizedReview, setPersonalizedReview] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const fetchInProgress = useRef(false);
+
   const [selectedGame, setSelectedGame] = useState<Game | null>(() => {
     try {
       const storedGame = localStorage.getItem("selectedGame");
@@ -49,26 +32,15 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     }
   });
 
-  const [tldrData, setTldrData] = useState<any>(null);
-  const [personalizedReview, setPersonalizedReview] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
-
-  const fetchInProgress = useRef(false);
-
   useEffect(() => {
     if (selectedGame && !fetchInProgress.current) {
       setLoading(true);
       fetchInProgress.current = true;
-      const fetchTldrData = async () => {
+
+      const getTldrData = async () => {
         try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URL}/api/generalReview`,
-            {
-              params: { appid: selectedGame.appid, name: selectedGame.name },
-            },
-          );
-          setTldrData(response.data);
+          const data = await fetchTldrData(selectedGame.appid, selectedGame.name);
+          setTldrData(data);
         } catch (error) {
           console.error("Failed to fetch TLDR data", error);
         } finally {
@@ -77,7 +49,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         }
       };
 
-      fetchTldrData();
+      getTldrData();
     } else {
       setTldrData(null);
     }
@@ -102,21 +74,16 @@ export const GameProvider = ({ children }: GameProviderProps) => {
       return;
     }
 
-    const fetchPersonalizedReview = async () => {
+    const getPersonalizedReview = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/personalizedReview`,
-          {
-            params: { sub: user?.profile.sub, name: selectedGame.name },
-          }
-        );
-        setPersonalizedReview(response.data);
+        const review = await fetchPersonalizedReview(user?.profile.sub, selectedGame.name);
+        setPersonalizedReview(review);
       } catch (error) {
         console.error("Failed to fetch personalized review", error);
       }
     };
 
-    fetchPersonalizedReview();
+    getPersonalizedReview();
   }, [user, selectedGame, tldrData]);
 
   return (

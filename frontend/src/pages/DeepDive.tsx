@@ -1,23 +1,10 @@
 import { useContext } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GameContext } from "./MyProvider";
-import { LoadingScreen } from "./LoadingScreen";
-
-type TldrData = {
-  deep_dive: DeepDive;
-};
-
-type DeepDive = {
-  title: string;
-  content: string;
-};
-
-interface GameContextType {
-  tldrData: TldrData;
-}
+import { GameContext } from "../context/context";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 export const DeepDive = () => {
-  const { tldrData } = useContext(GameContext) as GameContextType;
+  const { tldrData } = useContext(GameContext);
 
   if (!tldrData) {
     return <LoadingScreen text="Loading results, please wait..." />;
@@ -35,7 +22,7 @@ export const DeepDive = () => {
 
       <p className="text-xl text-muted-foreground pt-4 pb-8">
         Full in-depth review with detailed explanations on what the game has to
-        offer, taken directly from steam reviws, metacritic, pc gamer and other
+        offer, taken directly from steam reviews, metacritic, pc gamer, and other
         sources.
       </p>
 

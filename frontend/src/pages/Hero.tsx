@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from "react";
-import { SearchBar } from "./SearchBar";
-import { HeroLandingPageCards, GamePageCards } from "./HeroCards";
-import { GameContext } from "./MyProvider";
-import { GameCard } from "./HeroCards";
+import { SearchBar } from "../components/SearchBar";
+import { HeroLandingPageCards, GamePageCards } from "../components/HeroCards";
+import { GameContext } from "../context/context";
+import { GameCard } from "../components/HeroCards";
 
 export const Hero = () => {
   const [games, setGames] = useState<any[]>([]);

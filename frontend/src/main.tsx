@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { AuthProvider } from "react-oidc-context";
-import { GameProvider } from "./components/MyProvider.tsx";
+import { GameProvider } from "./context/context.tsx";
 import "./index.css";
 
 const cognitoAuthConfig = {

@@ -1,62 +1,20 @@
 import { useState, useContext, useEffect } from "react";
 import { useAuth } from "react-oidc-context";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { UserIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { buttonVariants } from "./ui/button";
 import { Menu } from "lucide-react";
 import { LogoIcon } from "./Icons";
-import { Link } from "react-router-dom";
-import { GameContext } from "./MyProvider";
+import { Link, To } from "react-router-dom";
+import { GameContext } from "../context/context";
 import { useNavigate } from "react-router-dom";
-interface RouteProps {
-  href: string;
-  label: string;
-  requiresSelection: boolean;
-  requireLogin: boolean;
-}
-
-const routeList: RouteProps[] = [
-  {
-    href: "/tldr",
-    label: "TLDR",
-    requiresSelection: true,
-    requireLogin: false,
-  },
-  {
-    href: "/deepdive",
-    label: "Deep Dive",
-    requiresSelection: true,
-    requireLogin: false,
-  },
-  {
-    href: "/personalizedreview",
-    label: "Personalized Review",
-    requiresSelection: true,
-    requireLogin: true,
-  },
-  {
-    href: "/explore",
-    label: "Explore",
-    requiresSelection: false,
-    requireLogin: true,
-  },
-  {
-    href: "/about",
-    label: "About",
-    requiresSelection: false,
-    requireLogin: false,
-  },
-];
+import { routeList } from "../utils/routeList"; 
 
 export const Navbar = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [showMessage, setShowMessage] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [showMessage, setShowMessage] = useState("");
   const auth = useAuth();
   const { selectedGame } = useContext(GameContext);
   const navigate = useNavigate();
@@ -76,21 +34,11 @@ export const Navbar = () => {
     }
   }, [showMessage]);
 
-  const handleNavigation = (
-    requiresSelection: boolean,
-    requireLogin: boolean,
-    href: string,
-  ) => {
+  const handleNavigation = (requiresSelection: boolean, requireLogin: boolean, href: To) => {
     if (requireLogin && !auth.isAuthenticated) {
       setShowMessage("You must first login to use this feature.");
     } else if (requiresSelection && !selectedGame) {
-      setShowMessage(
-        "You must first select a game from the search bar to use this feature.",
-      );
-    } else if (requiresSelection && !selectedGame) {
-      setShowMessage(
-        "You must first select a game from the search bar to use this feature.",
-      );
+      setShowMessage("You must first select a game from the search bar to use this feature.");
     } else {
       setShowMessage("");
       navigate(href);
@@ -106,37 +54,24 @@ export const Navbar = () => {
               <LogoIcon />
             </Link>
           </NavigationMenuItem>
-
           <span className="flex md:hidden">
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger className="px-2">
-                <Menu
-                  className="flex md:hidden h-5 w-5"
-                  onClick={() => setIsOpen(true)}
-                >
+                <Menu className="flex md:hidden h-5 w-5" onClick={() => setIsOpen(true)}>
                   <span className="sr-only">Menu Icon</span>
                 </Menu>
               </SheetTrigger>
-
-              <SheetContent side={"left"}>
+              <SheetContent side="left">
                 <nav className="flex flex-col justify-center items-center gap-2 mt-4">
-                  {routeList.map(
-                    ({ href, label, requiresSelection, requireLogin }) => (
-                      <button
-                        key={label}
-                        onClick={() =>
-                          handleNavigation(
-                            requiresSelection,
-                            requireLogin,
-                            href,
-                          )
-                        }
-                        className={buttonVariants({ variant: "ghost" })}
-                      >
-                        {label}
-                      </button>
-                    ),
-                  )}
+                  {routeList.map(({ href, label, requiresSelection, requireLogin }) => (
+                    <button
+                      key={label}
+                      onClick={() => handleNavigation(requiresSelection, requireLogin, href)}
+                      className={buttonVariants({ variant: "ghost" })}
+                    >
+                      {label}
+                    </button>
+                  ))}
                   <a
                     href="https://github.com/leoMirandaa/shadcn-landing-page.git"
                     target="_blank"
@@ -152,19 +87,15 @@ export const Navbar = () => {
           </span>
 
           <nav className="hidden md:flex gap-2">
-            {routeList.map(
-              ({ href, label, requiresSelection, requireLogin }) => (
-                <button
-                  key={label}
-                  onClick={() =>
-                    handleNavigation(requiresSelection, requireLogin, href)
-                  }
-                  className={`text-[17px] ${buttonVariants({ variant: "ghost" })}`}
-                >
-                  {label}
-                </button>
-              ),
-            )}
+            {routeList.map(({ href, label, requiresSelection, requireLogin }) => (
+              <button
+                key={label}
+                onClick={() => handleNavigation(requiresSelection, requireLogin, href)}
+                className={`text-[17px] ${buttonVariants({ variant: "ghost" })}`}
+              >
+                {label}
+              </button>
+            ))}
           </nav>
 
           <div className="hidden md:flex gap-2">
@@ -179,7 +110,7 @@ export const Navbar = () => {
         </NavigationMenuList>
       </NavigationMenu>
 
-      {showMessage != "" && (
+      {showMessage && (
         <div className="fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-md">
           {showMessage}
         </div>

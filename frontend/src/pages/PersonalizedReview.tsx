@@ -1,12 +1,11 @@
 import { useContext } from "react";
-import { GameContext } from "./MyProvider";
+import { GameContext } from "../context/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LoadingScreen } from "./LoadingScreen";
+import { LoadingScreen } from "../components/LoadingScreen";
 
 export const PersonalizedReview = () => {
   const { personalizedReview } = useContext(GameContext);
 
-  console.log(personalizedReview);
   return (
     <section id="pricing" className="container py-24 sm:py-32 space-y-8">
       <h2 className="text-3xl md:text-4xl font-bold text-center">

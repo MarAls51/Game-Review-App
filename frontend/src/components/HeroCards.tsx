@@ -1,8 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarImage } from "./ui/avatar";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -10,13 +9,13 @@ import {
 import "swiper/css";
 import "swiper/css/autoplay";
 import React, { useContext, useEffect, useState } from "react";
-import { GameContext } from "./MyProvider.tsx";
+import { GameContext } from "../context/context.tsx";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
-import axios from "axios";
+import { fetchTestimonials } from "@/services/apiService.tsx";
 
 interface Testimonial {
   alias: string;
@@ -27,21 +26,17 @@ export const HeroLandingPageCards = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/user-testimonials`,
-        );
-
-        setTestimonials(response.data);
+        const data = await fetchTestimonials(); 
+        setTestimonials(data);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
       }
     };
 
-    fetchTestimonials();
+    fetchData();
   }, []);
-
   return (
     <Swiper
       modules={[Autoplay]}
@@ -78,16 +73,6 @@ export const HeroLandingPageCards = () => {
 interface GameCardProps {
   games: any[];
 }
-
-interface game {
-  type: any;
-  appid: any;
-  name: any;
-  description: any;
-  screenshots: any;
-  movies: any;
-}
-
 interface GameCard {
   game: any;
 }

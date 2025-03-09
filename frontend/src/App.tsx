@@ -1,17 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
-import { About } from "./components/About";
-import { Explore } from "./components/Explore";
-import { Tldr } from "./components/Tldr";
-import { Footer } from "./components/Footer";
-import { Hero } from "./components/Hero";
-import { HowItWorks } from "./components/HowItWorks";
+import { About } from "./pages/About";
+import { Explore } from "./pages/Explore";
+import { Tldr } from "./pages/Tldr";
+import { Footer } from "./pages/Footer";
+import { Hero } from "./pages/Hero";
 import { Navbar } from "./components/Navbar";
-import { PersonalizedReview } from "./components/PersonalizedReview";
-import { ScrollToTop } from "./components/ScrollToTop";
-import { DeepDive } from "./components/DeepDive";
+import { PersonalizedReview } from "./pages/PersonalizedReview";
+import { DeepDive } from "./pages/DeepDive";
 import { LoadingScreen } from "./components/LoadingScreen";
-import { Account } from "./components/Account";
+import { Account } from "./pages/Account";
 
 import "./App.css";
 import { useEffect, useState } from "react";
@@ -44,7 +42,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Hero />} />
         <Route path="/about" element={<About />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
         <Route path="/tldr" element={<Tldr />} />
         <Route path="/deepdive" element={<DeepDive />} />
         <Route path="/personalizedreview" element={<PersonalizedReview />} />
@@ -53,7 +50,6 @@ function App() {
       </Routes>
 
       {/* <Footer /> */}
-      <ScrollToTop />
     </Router>
   );
 }
