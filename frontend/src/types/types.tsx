@@ -29,7 +29,7 @@ export type BulletPointSummary = {
     deep_dive: DeepDive;
   };
   
-  export type Game {
+  export type Game = {
     type: string;
     appid: any;
     name: string;
@@ -38,7 +38,7 @@ export type BulletPointSummary = {
     movies: any;
   }
   
-  export type GameContextType {
+  export type GameContextType = {
     selectedGame: Game | null;
     setSelectedGame: (game: Game | null) => void;
     tldrData: TldrData | null;
