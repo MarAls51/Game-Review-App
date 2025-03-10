@@ -16,7 +16,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
     e.preventDefault();
 
     try {
-      console.log(import.meta.env.VITE_BACKEND_URL);
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/search`,
         {
@@ -25,8 +24,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       );
 
       const games = response.data;
-      console.log(games);
-
       onSearch(games);
     } catch (error) {
       console.error("Error fetching games:", error);

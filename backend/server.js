@@ -14,6 +14,7 @@ const steamRoutes = require("./routes/steamlogin");
 const xboxRoutes = require("./routes/xboxscrape");
 const personalReviewRoutes = require("./routes/personalizedReview");
 const chartRoutes = require("./routes/chart");
+const cognitoRoutes = require("./routes/cognito")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,7 +25,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultSecret',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // NOTE: I BETTER NOT FORGET TO SET THIS TO TRUE ON HTTPS, SO HELP ME GO.
+  cookie: { secure: false }
 }));
 
 app.use(cors({
@@ -42,6 +43,7 @@ app.use("/api", steamRoutes);
 app.use("/api", xboxRoutes);
 app.use("/api", personalReviewRoutes);
 app.use("/api", chartRoutes);
+app.use("/api", cognitoRoutes)
 
 async function startServer() {
   try {

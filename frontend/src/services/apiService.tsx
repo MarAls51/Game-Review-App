@@ -65,7 +65,6 @@ export const fetchUser = async (sub: string | undefined) => {
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
-      console.log("User not found, creating new user...");
       try {
         await axios.post(`${API_BASE_URL}/api/user`, { sub, alias: "Anonymous" });
         return { alias: "Anonymous" };
@@ -125,3 +124,14 @@ export const createUser = async (sub: string | undefined) => {
 export const steamRedirect = (sub: string | undefined) => {
     return `${API_BASE_URL}/api/login?sub=${sub}`
 }
+
+export const fetchAuthConfig = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth-config`);
+    if (!response.ok) throw new Error("Failed to fetch auth config");
+    return response.json();
+  } catch (error) {
+    console.error("Auth config error:", error);
+    return null;
+  }
+};

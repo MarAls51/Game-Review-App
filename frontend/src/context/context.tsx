@@ -27,7 +27,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
       const storedGame = localStorage.getItem("selectedGame");
       return storedGame ? JSON.parse(storedGame) : null;
     } catch (error) {
-      console.error("Error parsing selected game from localStorage:", error);
+      console.error("Error parsing selected game:", error);
       return null;
     }
   });
@@ -64,7 +64,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
         localStorage.removeItem("selectedGame");
       }
     } catch (error) {
-      console.error("Error storing selected game in localStorage:", error);
+      console.error("Error storing selected game:", error);
     }
   }, [selectedGame]);
 

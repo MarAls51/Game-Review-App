@@ -63,11 +63,15 @@ async function getUserGameData(sub) {
         xboxData: user.xbox?.games || {},
     };
 }
-
 async function generatePersonalizedReview(sub, name) {
     logger.info(`Generating personalized review for ${name} and user ${sub}`);
     
     const { user, steamData, xboxData } = await getUserGameData(sub);
+
+    if ((steamData.length + xboxData.length) < 20) {
+        logger.warn("Not enough data: Combined Xbox and Steam games are less than 20.");
+        throw new Error("Not enough data: Combined Xbox and Steam games are less than 20.");
+    }
 
     const existingReview = user.personal_reviews.find(r => r.game_title === name);
     if (existingReview) {

@@ -58,7 +58,6 @@ export const Account = () => {
         } catch (error: unknown) {
           if (axios.isAxiosError(error)) {
             if (error.response?.status === 404) {
-              console.log("User not found, creating new user...");
               try {
                 await createUser(user?.profile.sub)
                 setUsername("Anonymous");
