@@ -6,16 +6,15 @@ services:
     image: frontend-image:latest
     secrets:
       - VITE_BACKEND_URL
-      - VITE_LOGOUT_URL_FULL
     networks:
       - my-network
-
-networks:
-  my-network:
-    driver: overlay
+    expose:
+      - "80" 
 
 secrets:
   VITE_BACKEND_URL:
     external: true
-  VITE_LOGOUT_URL_FULL:
+
+networks:
+  my-network:
     external: true

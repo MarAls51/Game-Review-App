@@ -7,12 +7,16 @@ services:
       replicas: 1
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - my-overlay-network
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/letsencrypt
+      - ./nginx_data:/var/lib/nginx/data
 
-networks:
-  my-overlay-network:
-    driver: overlay
-    attachable: true
+  certbot:
+    image: ertbot/certbot:latest
+    volumes:
+      - ./certs:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; certbot renew; done'"

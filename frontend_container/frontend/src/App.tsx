@@ -3,7 +3,6 @@ import { useAuth } from "react-oidc-context";
 import { About } from "./pages/About";
 import { Explore } from "./pages/Explore";
 import { Tldr } from "./pages/Tldr";
-import { Footer } from "./pages/Footer";
 import { Hero } from "./pages/Hero";
 import { Navbar } from "./components/Navbar";
 import { PersonalizedReview } from "./pages/PersonalizedReview";
@@ -49,7 +48,6 @@ function App() {
         <Route path="/account" element={<Account />} />
       </Routes>
 
-      {/* <Footer /> */}
     </Router>
   );
 }

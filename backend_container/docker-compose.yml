@@ -17,16 +17,11 @@ services:
       - CLIENT_ID
       - REDIRECT_URL
       - RESPONSE_TYPE
-      - CLIENT_SECRET
       - LOGOUT_URL
       - SCOPE
       - CORS_ORIGIN
     networks:
       - my-network 
-
-networks:
-  my-network: 
-    driver: overlay
 
 secrets:
   STEAM_API_KEY:
@@ -43,8 +38,6 @@ secrets:
     external: true
   MONGO_DB:
     external: true
-  SESSION_SECRET:
-    external: true
   AUTHORITY:
     external: true
   CLIENT_ID:
@@ -53,11 +46,15 @@ secrets:
     external: true
   RESPONSE_TYPE:
     external: true
-  CLIENT_SECRET:
+  SESSION_SECRET:
     external: true
   LOGOUT_URL:
     external: true
   SCOPE:
     external: true
   CORS_ORIGIN:
+    external: true
+
+networks:
+  my-network:
     external: true

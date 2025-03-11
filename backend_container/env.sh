@@ -12,7 +12,6 @@ export AUTHORITY=$(cat /run/secrets/AUTHORITY)
 export CLIENT_ID=$(cat /run/secrets/CLIENT_ID)
 export REDIRECT_URL=$(cat /run/secrets/REDIRECT_URL)
 export RESPONSE_TYPE=$(cat /run/secrets/RESPONSE_TYPE)
-export CLIENT_SECRET=$(cat /run/secrets/CLIENT_SECRET)
 export LOGOUT_URL=$(cat /run/secrets/LOGOUT_URL)
 export SCOPE=$(cat /run/secrets/SCOPE)
 
