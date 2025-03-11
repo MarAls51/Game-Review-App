@@ -28,7 +28,7 @@ export const HeroLandingPageCards = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchTestimonials(); 
+        const data = await fetchTestimonials();
         setTestimonials(data);
       } catch (error) {
         console.error("Error fetching testimonials:", error);
@@ -37,22 +37,26 @@ export const HeroLandingPageCards = () => {
 
     fetchData();
   }, []);
+
   return (
     <Swiper
       modules={[Autoplay]}
-      slidesPerView={3}
-      loop={true}
+      breakpoints={{
+        640: {
+          slidesPerView: 1, 
+        },
+        768: {
+          slidesPerView: 3, 
+        },
+      }}
       className="w-full"
     >
-      {testimonials.filter(user => user.testimonial).map((user, index) => (
+      {testimonials.filter((user) => user.testimonial).map((user, index) => (
         <SwiperSlide key={index}>
           <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
             <CardHeader className="flex flex-row items-center gap-4 pb-2">
               <Avatar>
-                <AvatarImage
-                  alt={user.alias}
-                  src={"/assets/mort.jpg"}
-                />
+                <AvatarImage alt={user.alias} src={"/assets/mort.jpg"} />
               </Avatar>
               <div className="flex flex-col">
                 <CardTitle className="text-lg">
@@ -60,9 +64,7 @@ export const HeroLandingPageCards = () => {
                 </CardTitle>
               </div>
             </CardHeader>
-            <CardContent>
-              {user.testimonial}
-            </CardContent>
+            <CardContent>{user.testimonial}</CardContent>
           </Card>
         </SwiperSlide>
       ))}
@@ -143,8 +145,14 @@ export const GamePageCards: React.FC<GameCardProps> = ({ games }) => {
   return (
     <Swiper
       modules={[Autoplay]}
-      slidesPerView={3}
-      loop={true}
+      breakpoints={{
+        640: {
+          slidesPerView: 1,
+        },
+        768: {
+          slidesPerView: 3, 
+        },
+      }}
       className="w-full"
     >
       {games.length > 0 &&
