@@ -27,11 +27,14 @@ router.get('/steam-charts', async (req, res) => {
       return res.status(500).json({ message: `Cannot scrape metrics for ${name}.` });
     }
 
+    logger.info(`Scraping stat data for ${name}:`);
+
     const pythonOutput = await scrapeSteamCharts(appid);
     logger.info(`Scraping completed for ${name}: ${pythonOutput}`);
 
     if (!fs.existsSync(gamesDataPath)) {
       logger.error(`File not found: ${gamesDataPath}`);
+      gameStatData.metrics_can_scrape = false;
       return res.status(500).json({ message: 'Server Error' });
     }
 
@@ -42,9 +45,17 @@ router.get('/steam-charts', async (req, res) => {
     fs.unlinkSync(gamesDataPath);
     logger.info(`Deleted file: ${gamesDataPath}`);
 
-    res.status(200).json({ game: gameStatData.name, metrics: gameStatData.metrics });
+    res.status(200).json(gameStatData.metrics);
   } catch (error) {
-    await updateGameMetrics(name, null, false);  
+    try {
+      let gameStatData = await getGameMetrics(name);
+      if (gameStatData) {
+        await updateGameMetrics(name, null, false);
+      }
+    } catch (fetchError) {
+      logger.error(`Failed to retrieve game metrics for ${name} in error handler: ${fetchError.message}`);
+    }
+    
     logger.error(`Error fetching or updating game metrics for ${name}: ${error.message}`);
     res.status(500).json({ message: 'Server error', error: error.message });
   }

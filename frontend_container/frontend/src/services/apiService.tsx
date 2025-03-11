@@ -55,7 +55,7 @@ export const fetchSteamChartData = async (appid: number, name: string) => {
     return response.data;
   } catch (error) {
     console.error("Error fetching stat data:", error);
-    return error; 
+    return 0; 
   }
 };
 

@@ -39,10 +39,13 @@ export const TldrYear = () => {
     const fetchTldrData = async () => {
       try {
         const data = await fetchSteamChartData(selectedGame.appid, selectedGame.name);
+        if(data === 0) {
+          setStatStatus(false);
+        }
+        console.log(data)
         setMetricData(data);
       } catch (error) {
         setStatStatus(false);
-        console.error("Error fetching stat data:", error);
       }
     };
 

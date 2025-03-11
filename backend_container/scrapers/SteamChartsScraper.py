@@ -16,7 +16,7 @@ class SteamStatScraper:
                 browser = await p.chromium.launch(headless=True)
                 page = await browser.new_page()
 
-                await page.goto(url, timeout=50000)
+                await page.goto(url, timeout=30000)
                 await page.wait_for_selector('.odd')
 
                 rows = await page.query_selector_all('.odd')
