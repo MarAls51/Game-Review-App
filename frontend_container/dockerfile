@@ -1,0 +1,17 @@
+FROM node:16
+
+WORKDIR /frontend
+
+COPY ./frontend/package*.json ./
+
+RUN npm install
+
+COPY frontend/ ./
+
+COPY env.sh /frontend/env.sh
+
+RUN chmod +x /frontend/env.sh
+
+EXPOSE 5173
+
+CMD ["./env.sh"]

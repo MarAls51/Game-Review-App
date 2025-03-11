@@ -1,0 +1,63 @@
+version: "3.7"
+
+services:
+  backend:
+    container_name: backend 
+    image: backend-image:latest
+    secrets:
+      - STEAM_API_KEY
+      - TWITCH_API_KEY
+      - TWITCH_CLIENT_KEY
+      - FRONTEND_URL
+      - BACKEND_URL
+      - OPENAI_API_KEY
+      - MONGO_DB
+      - SESSION_SECRET
+      - AUTHORITY
+      - CLIENT_ID
+      - REDIRECT_URL
+      - RESPONSE_TYPE
+      - CLIENT_SECRET
+      - LOGOUT_URL
+      - SCOPE
+      - CORS_ORIGIN
+    networks:
+      - my-network 
+
+networks:
+  my-network: 
+    driver: overlay
+
+secrets:
+  STEAM_API_KEY:
+    external: true
+  TWITCH_API_KEY:
+    external: true
+  TWITCH_CLIENT_KEY:
+    external: true
+  FRONTEND_URL:
+    external: true
+  BACKEND_URL:
+    external: true
+  OPENAI_API_KEY:
+    external: true
+  MONGO_DB:
+    external: true
+  SESSION_SECRET:
+    external: true
+  AUTHORITY:
+    external: true
+  CLIENT_ID:
+    external: true
+  REDIRECT_URL:
+    external: true
+  RESPONSE_TYPE:
+    external: true
+  CLIENT_SECRET:
+    external: true
+  LOGOUT_URL:
+    external: true
+  SCOPE:
+    external: true
+  CORS_ORIGIN:
+    external: true

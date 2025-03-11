@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  frontend:
+    container_name: frontend
+    image: frontend-image:latest
+    secrets:
+      - VITE_BACKEND_URL
+      - VITE_LOGOUT_URL_FULL
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: overlay
+
+secrets:
+  VITE_BACKEND_URL:
+    external: true
+  VITE_LOGOUT_URL_FULL:
+    external: true

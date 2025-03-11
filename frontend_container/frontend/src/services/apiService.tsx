@@ -109,7 +109,7 @@ export const validateXboxGamertag = async (sub: string | undefined, gamerTag: st
 
 export const createUser = async (sub: string | undefined) => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/user`,
+      const response = await axios.post(`${API_BASE_URL}/api/user`,
         {
           sub: sub,
           alias: "Anonymous",
@@ -127,11 +127,13 @@ export const steamRedirect = (sub: string | undefined) => {
 
 export const fetchAuthConfig = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth-config`);
-    if (!response.ok) throw new Error("Failed to fetch auth config");
-    return response.json();
+    const response = await axios.get(`${API_BASE_URL}/api/auth-config`);
+    return response.data;
   } catch (error) {
     console.error("Auth config error:", error);
     return null;
   }
 };
+
+
+

@@ -8,7 +8,6 @@ router.get("/auth-config", (req, res) => {
     const config = {
         authority: process.env.AUTHORITY,
         client_id: process.env.CLIENT_ID,
-        client_secret: process.env.CLIENT_SECRET,
         redirect_uri: process.env.REDIRECT_URL,
         response_type: process.env.RESPONSE_TYPE,
         post_logout_redirect_uri: process.env.LOGOUT_URL,
