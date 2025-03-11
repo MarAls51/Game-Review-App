@@ -17,8 +17,7 @@ export const PersonalizedReview = () => {
         Review
       </h2>
       <h3 className="text-xl text-center text-muted-foreground pt-4 pb-8">
-        Detailed review based on your specific playstyle and gameplay history as
-        noted from your connected Steam and Microsoft accounts.
+        Detailed review based on your specific playstyle and gameplay history, please note  the model is still being trained so these responses may vary.
       </h3>
       {!personalizedReview ? (
         <section id="pricing" className="container py-24 sm:py-32 space-y-8">

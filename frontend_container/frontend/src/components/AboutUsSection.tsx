@@ -14,7 +14,7 @@ export const AboutUsSection = () => {
           unbiased, as well as personalized experience that helps you make
           informed decisions while{" "}
           <span className="bg-gradient-to-b from-primary/60 to-primary text-transparent bg-clip-text">
-            filtering out all the bullshit.
+            filtering out all the nonsense.
           </span>
         </p>
       </div>

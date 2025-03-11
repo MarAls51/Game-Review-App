@@ -18,7 +18,7 @@ const cognitoRoutes = require("./routes/cognito")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN = "http://localhost:5173/"; 
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173"; 
 const MONGO_URI = process.env.MONGO_DB;
 
 app.use(session({

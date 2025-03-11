@@ -44,14 +44,14 @@ export const HeroLandingPageCards = () => {
       loop={true}
       className="w-full"
     >
-      {testimonials.map((user, index) => (
+      {testimonials.filter(user => user.testimonial).map((user, index) => (
         <SwiperSlide key={index}>
           <Card className="w-[340px] drop-shadow-xl shadow-black/10 dark:shadow-white/10">
             <CardHeader className="flex flex-row items-center gap-4 pb-2">
               <Avatar>
                 <AvatarImage
                   alt={user.alias}
-                  src={"https://github.com/shadcn.png"}
+                  src={"/assets/mort.jpg"}
                 />
               </Avatar>
               <div className="flex flex-col">
@@ -61,7 +61,7 @@ export const HeroLandingPageCards = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {user.testimonial || "No testimonial available."}
+              {user.testimonial}
             </CardContent>
           </Card>
         </SwiperSlide>

@@ -1,25 +1,21 @@
 import sys
 import asyncio
 import json
-from logger import get_logger
 from playwright.async_api import async_playwright
-
-logger = get_logger()
 
 class XboxGamertagValidator:
     def __init__(self):
         self.url = "https://xboxgamertag.com/search/{gamertag}"
 
     async def validate_gamertag(self, gamertag):
-        logger.info(f"Validating gamertag: {gamertag}")
         url = self.url.format(gamertag=gamertag)
 
         try:
             async with async_playwright() as p:
-                browser = await p.chromium.launch(headless=True)
+                browser = await p.chromium.launch(headless=False)
                 page = await browser.new_page()
 
-                await page.goto(url, timeout=10000)
+                await page.goto(url, timeout=30000)
 
                 games = await page.query_selector_all('.game-card-desc h3')
                 progress_bars = await page.query_selector_all('.progress-bar')
@@ -34,19 +30,18 @@ class XboxGamertagValidator:
                     })
 
                 if len(game_data) == 0:
-                    logger.info("No game data found. Exiting.")
+                    print("No game data found. Exiting.")
                     sys.exit(0)
 
                 with open(f'games_{gamertag}.json', 'w') as json_file:
                     json.dump(game_data, json_file, indent=4)
-                    logger.info(f"Game data for {gamertag} saved to 'games_{gamertag}.json'")
+                    print(f"Game data for {gamertag} saved to 'games_{gamertag}.json'")
 
                 await browser.close()
-
                 sys.exit(1)
 
         except Exception as e:
-            logger.error(f"Error validating gamertag: {e}")
+            print(f"Error validating gamertag: {e}")
             sys.exit(0)
 
     def run(self, gamertag):
@@ -54,7 +49,7 @@ class XboxGamertagValidator:
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        logger.error("Usage: python MicrosoftScraper.py <gamertag>")
+        print("Usage: python MicrosoftScraper.py <gamertag>")
         sys.exit(1)
 
     gamertag = sys.argv[1]
