@@ -135,5 +135,12 @@ export const fetchAuthConfig = async () => {
   }
 };
 
-
-
+export const authLogout = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/api/auth-logout`);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    return null;
+  }
+};

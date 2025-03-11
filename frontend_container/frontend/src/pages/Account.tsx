@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import { ConnectedAccounts } from "@/types/types";
 import { AccountForm } from "@/components/AccountForm";
-import { createUser, deleteUser, fetchUser, steamRedirect, updateUser, validateXboxGamertag } from "@/services/apiService";
+import { authLogout, createUser, deleteUser, fetchUser, steamRedirect, updateUser, validateXboxGamertag } from "@/services/apiService";
 
 const AccountHeader = ({ handleLogout }: any) => {
   return (
@@ -124,11 +124,11 @@ export const Account = () => {
     setIsDropdownOpen((prev) => !prev);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     auth.removeUser();
     sessionStorage.clear();
     localStorage.clear();
-    window.location.href = import.meta.env.VITE_LOGOUT_URL_FULL;
+    window.location.href = await authLogout()
   };
 
   const handleDeleteAccount = async () => {
@@ -137,7 +137,7 @@ export const Account = () => {
       auth.removeUser();
       sessionStorage.clear();
       localStorage.clear();
-      window.location.href = import.meta.env.VITE_LOGOUT_URL_FULL;
+      window.location.href = await authLogout()
     } catch (error) {
       toast.error(
         "An error occurred while deleting your account. Please try again.",
