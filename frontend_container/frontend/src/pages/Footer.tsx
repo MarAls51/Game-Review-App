@@ -1,5 +1,3 @@
-import { LogoIcon } from "../components/Icons";
-
 export const Footer = () => {
   return (
     <footer id="footer">

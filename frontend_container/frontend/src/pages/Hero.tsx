@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { SearchBar } from "../components/SearchBar";
 import { HeroLandingPageCards, GamePageCards } from "../components/HeroCards";
 import { GameContext } from "../context/context";
