@@ -1,1 +1,2 @@
-[Drawing1.pdf](https://github.com/user-attachments/files/19231455/Drawing1.pdf)
+
+![Drawing1](https://github.com/user-attachments/assets/5759bb8a-cd56-45b0-8a42-87acfa0de7fb)
