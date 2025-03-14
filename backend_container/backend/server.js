@@ -14,18 +14,10 @@ const steamRoutes = require("./routes/steamlogin");
 const xboxRoutes = require("./routes/xboxscrape");
 const personalReviewRoutes = require("./routes/personalizedReview");
 const chartRoutes = require("./routes/chart");
-const cognitoRoutes = require("./routes/cognito")
+const cognitoRoutes = require("./routes/cognito");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_DB;
-
-mongoose.connect(process.env.MONGO_DB).then(() => {
-  console.log('MongoDB connected');
-}).catch(err => {
-  console.error('MongoDB connection error:', err);
-  process.exit(1);
-});
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -37,13 +29,11 @@ app.use(session({
     sameSite: 'lax'
   },
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI,
-    ttl: 14 * 24 * 60 * 60, 
+    mongoUrl: process.env.MONGO_DB,
+    ttl: 14 * 24 * 60 * 60,
     autoRemove: 'native'
   })
 }));
-
-app.use(express.json());
 
 app.use("/api", searchRoutes);
 app.use("/api", tldrRoutes);
@@ -52,19 +42,15 @@ app.use("/api", steamRoutes);
 app.use("/api", xboxRoutes);
 app.use("/api", personalReviewRoutes);
 app.use("/api", chartRoutes);
-app.use("/api", cognitoRoutes)
+app.use("/api", cognitoRoutes);
 
-async function startServer() {
-  try {
-    await mongoose.connect(MONGO_URI);
-    logger.info("Connected to MongoDB!");
+mongoose.connect(process.env.MONGO_DB, {
+}).then(() => {
+  console.log('MongoDB connected');
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+  process.exit(1);
+});
 
-    app.listen(PORT, () => logger.info(`HTTP server running on port ${PORT}`));
 
-  } catch (err) {
-    logger.error("MongoDB Connection Error:", err);
-    process.exit(1);
-  }
-}
-
-startServer();
+app.listen(PORT, () => logger.info(`HTTP server running on port ${PORT}`));
