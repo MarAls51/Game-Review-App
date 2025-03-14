@@ -9,7 +9,6 @@ class XboxGamertagValidator:
 
     async def validate_gamertag(self, gamertag):
         url = self.url.format(gamertag=gamertag)
-
         try:
             async with async_playwright() as p:
                 browser = await p.chromium.launch(headless=False)
