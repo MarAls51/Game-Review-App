@@ -35,7 +35,6 @@ async function createUser(req, res) {
       testimonial: null,
     });
     await userData.save();
-    req.session.sub = sub
     logger.info(`User created successfully for sub: ${sub}`);
     res.status(201).json(userData);
   } catch (error) {
