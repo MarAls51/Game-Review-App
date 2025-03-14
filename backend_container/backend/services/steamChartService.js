@@ -4,7 +4,7 @@ const logger = require('../utils/logger');
 
 require('dotenv').config();
 
-const pythonPath = path.join(__dirname, '../../scrapers/env/Scripts/python');
+const pythonPath = path.join(__dirname, '../../scrapers/venv/bin/python');
 const scriptPath = path.join(__dirname, '../../scrapers/SteamChartsScraper.py');
 
 async function scrapeSteamCharts(appid) {

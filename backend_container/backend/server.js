@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const session = require("express-session");
-const logger = require("./utils/logger"); 
+const logger = require("./utils/logger");
 
 dotenv.config({ path: "./config/.env" });
 
@@ -18,7 +18,7 @@ const cognitoRoutes = require("./routes/cognito")
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173"; 
+const CORS_ORIGIN = process.env.CORS_ORIGIN;
 const MONGO_URI = process.env.MONGO_DB;
 
 app.use(session({
@@ -49,7 +49,8 @@ async function startServer() {
     await mongoose.connect(MONGO_URI);
     logger.info("Connected to MongoDB!");
 
-    app.listen(PORT, () => logger.info(`Server running on port ${PORT}`));
+    app.listen(PORT, () => logger.info(`HTTP server running on port ${PORT}`));
+
   } catch (err) {
     logger.error("MongoDB Connection Error:", err);
     process.exit(1);

@@ -6,7 +6,7 @@ const User = require('../models/userSchema');
 
 async function validateGamertag(sub, gamerTag) {
   const gamesDataPath = `games_${gamerTag}.json`;
-  const pythonPath = path.join(__dirname, '../../scrapers/env/Scripts/python');
+  const pythonPath = path.join(__dirname, '../../scrapers/venv/bin/python');
   const scriptPath = path.join(__dirname, '../../scrapers/MicrosoftScraper.py');
   
   logger.info(`Validating Xbox gamertag: ${gamerTag} for user: ${sub}`);
