@@ -3,7 +3,6 @@ import { useAuth } from "react-oidc-context";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { sanitizeInput } from "../components/Sanitizer";
 import { toast } from "react-toastify";
-import axios from "axios";
 import { ConnectedAccounts } from "@/types/types";
 import { AccountForm } from "@/components/AccountForm";
 import { authLogout, createUser, deleteUser, fetchUser, steamRedirect, updateUser, validateXboxGamertag } from "@/services/apiService";
@@ -43,44 +42,26 @@ export const Account = () => {
   useEffect(() => {
     if (user && !isFetching) {
       const fetchUserData = async () => {
-        try {
-          setIsFetching(true);
-          const data = await fetchUser(user?.profile.sub)
-          if (data) {
-            setUsername(data.alias || "Anonymous");
-            setTestimonial(data.testimonial || "");
-            setConnectedAccounts({
-              steam: data.steam?.steamid || "",
-              microsoft: data.xbox?.xboxGamertag || "",
-              playstation: data.playstation || "",
-            });
-          }
-        } catch (error: unknown) {
-          if (axios.isAxiosError(error)) {
-            if (error.response?.status === 404) {
-              try {
-                await createUser(user?.profile.sub)
-                setUsername("Anonymous");
-              } catch (postError: unknown) {
-                console.error(
-                  "Failed to create user:",
-                  (postError as Error).message,
-                );
-              }
-            } else {
-              console.error("Failed to fetch user data:", error.message);
-            }
-          } else {
-            console.error("Unexpected error:", (error as Error).message);
-          }
-        } finally {
-          setIsFetching(false);
+        setIsFetching(true);
+        const data = await fetchUser(user?.profile.sub);
+        if (data !== 0) {
+          setUsername(data.alias || "Anonymous");
+          setTestimonial(data.testimonial || "");
+          setConnectedAccounts({
+            steam: data.steam?.steamid || "",
+            microsoft: data.xbox?.xboxGamertag || "",
+            playstation: data.playstation || "",
+          });
+        } else {
+          await createUser(user?.profile.sub);
+          setUsername("Anonymous");
         }
+        setIsFetching(false);
       };
-
+  
       fetchUserData();
     }
-  }, [user]);
+  }, [user]);  
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);

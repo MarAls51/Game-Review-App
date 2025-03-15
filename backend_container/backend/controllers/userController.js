@@ -11,7 +11,7 @@ async function getUser(req, res) {
       logger.warn(`User not found for sub: ${sub}`);
       return res.status(404).json({ message: 'User not found' }); 
     }
-
+    req.session.user = { id: userData.sub };
     logger.info(`User data retrieved successfully for sub: ${sub}`);
     return res.json(userData);
   } catch (error) {
@@ -24,7 +24,6 @@ async function createUser(req, res) {
   const { sub, alias } = req.body;
   try {
     logger.info(`Creating user data for sub: ${sub}, alias: ${alias}`);
-    
     const userData = new User({
       sub,
       alias,
@@ -35,6 +34,7 @@ async function createUser(req, res) {
       testimonial: null,
     });
     await userData.save();
+    req.session.user = { id: userData.sub };
     logger.info(`User created successfully for sub: ${sub}`);
     res.status(201).json(userData);
   } catch (error) {

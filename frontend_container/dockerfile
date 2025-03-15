@@ -9,15 +9,21 @@ RUN npm install
 COPY frontend/ ./
 
 ARG VITE_BACKEND_URL
-
-RUN VITE_BACKEND_URL=$VITE_BACKEND_URL npm run build 
+RUN echo "VITE_BACKEND_URL=$VITE_BACKEND_URL" && \
+    npm run build
 
 FROM nginx:alpine
 
+RUN adduser -D -g 'frontend' frontend
+
 RUN rm /etc/nginx/conf.d/default.conf
+
+RUN chown -R frontend:frontend /usr/share/nginx/html /etc/nginx
 
 COPY --from=builder /frontend/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/nginx.conf
+
+USER frontend
 
 CMD ["nginx", "-g", "daemon off;"]

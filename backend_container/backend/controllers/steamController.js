@@ -4,7 +4,11 @@ const logger = require('../utils/logger');
 
 async function login(req, res) {
     try {
-        req.session.sub = req.query.sub;
+        if (!sub) {
+            logger.error("sub parameter is missing from session during Steam login");
+            return res.status(400).json({ message: "sub parameter is missing from session" });
+        }
+
         const url = await getSteamRedirectUrl();
         logger.info(`Redirecting user ${req.query.sub} to Steam login URL`);
         res.redirect(url);
@@ -16,11 +20,9 @@ async function login(req, res) {
 
 async function loginCallback(req, res) {
     try {
-        const sub = req.session.sub;
-        delete req.session.sub;
-
+        const sub = req.session.user?.id;
         if (!sub) {
-            logger.error("sub parameter is missing from session during Steam callback");
+            logger.warn("sub parameter is missing from session during Steam callback");
             return res.status(400).json({ message: "sub parameter is missing from session" });
         }
 
@@ -28,7 +30,7 @@ async function loginCallback(req, res) {
         const userData = await User.findOne({ sub });
 
         if (!userData) {
-            logger.error(`User not found for sub: ${sub}`);
+            logger.warn(`User not found for sub: ${sub}`);
             return res.status(404).json({ message: "User not found for sub: " + sub });
         }
 
