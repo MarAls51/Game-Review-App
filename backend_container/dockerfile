@@ -1,7 +1,6 @@
 FROM node:18.15 AS node-base
 WORKDIR /backend
 
-
 COPY backend/package*.json ./
 RUN npm install && npm cache clean --force
 
@@ -25,12 +24,23 @@ USER appuser
 COPY --from=node-base /backend /backend
 COPY --from=python-base /scrapers /scrapers
 
+ENV STEAM_API_KEY=/run/secrets/STEAM_API_KEY
+ENV TWITCH_API_KEY=/run/secrets/TWITCH_API_KEY
+ENV TWITCH_CLIENT_KEY=/run/secrets/TWITCH_CLIENT_KEY
+ENV FRONTEND_URL=/run/secrets/FRONTEND_URL
+ENV BACKEND_URL=/run/secrets/BACKEND_URL
+ENV OPENAI_API_KEY=/run/secrets/OPENAI_API_KEY
+ENV MONGO_DB=/run/secrets/MONGO_DB
+ENV SESSION_SECRET=/run/secrets/SESSION_SECRET
+ENV AUTHORITY=/run/secrets/AUTHORITY
+ENV CLIENT_ID=/run/secrets/CLIENT_ID
+ENV REDIRECT_URL=/run/secrets/REDIRECT_URL
+ENV RESPONSE_TYPE=/run/secrets/RESPONSE_TYPE
+ENV LOGOUT_URL=/run/secrets/LOGOUT_URL
+ENV SCOPE=/run/secrets/SCOPE
+
 ENV PATH="/backend/node_modules/.bin:$PATH"
-
-COPY env.sh /backend/env.sh
-
-RUN chmod +x /backend/env.sh
 
 EXPOSE 5000
 
-CMD ["./env.sh"]
+CMD ["npm", "start"]
