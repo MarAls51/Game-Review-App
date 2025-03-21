@@ -37,7 +37,7 @@ async function searchSteamGames(query) {
         : [],
       movies: response.data[appIDs[index]]?.data.movies
         ? response.data[appIDs[index]]?.data.movies.map((movie) => ({
-            url: movie.mp4.max,
+            url: movie.mp4.max.replace('http://', 'https://'),
           }))
         : [],
     }));

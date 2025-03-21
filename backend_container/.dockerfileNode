@@ -1,0 +1,46 @@
+FROM node:20 AS node-base
+WORKDIR /backend
+COPY backend/package*.json ./
+RUN apt-get update && apt-get install -y openssl && npm install && npm cache clean --force
+COPY backend/ ./
+
+FROM python:3.12-slim AS python-base
+WORKDIR /scrapers
+COPY scrapers/requirements.txt .
+RUN apt-get update && apt-get install -y \
+    libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libatspi2.0-0 \
+    libxdamage1 libxkbcommon0 libasound2 libgbm-dev libxshmfence1 \
+    wget unzip curl && \
+    python3 -m venv venv --copies && \
+    ./venv/bin/pip3 install --no-cache-dir -r requirements.txt && \
+    ./venv/bin/pip3 install playwright && \
+    ./venv/bin/python -m playwright install-deps && \
+    ./venv/bin/python -m playwright install chromium
+COPY scrapers/ ./
+RUN python3 --version
+
+FROM ubuntu:latest
+RUN apt-get update && apt-get install -y \
+    nginx curl telnet netcat-openbsd \
+    python3.12 python3.12-dev nodejs npm
+
+RUN groupadd -g 1001 appgroup && useradd -m -u 1001 -g appgroup appuser
+
+RUN mkdir -p /backend /scrapers /backend/utils/logs /var/cache/nginx
+COPY --from=node-base --chown=appuser:appgroup /backend /backend
+COPY --from=python-base --chown=appuser:appgroup /scrapers /scrapers
+RUN chown -R appuser:appgroup /backend /scrapers
+
+USER appuser
+ENV PATH="/backend/node_modules/.bin:$PATH:/scrapers/venv/bin:$PATH"
+
+EXPOSE 5000
+
+WORKDIR /backend
+
+COPY entrypoint.sh /entrypoint.sh
+ENTRYPOINT ["/entrypoint.sh"]
+
+USER root
+RUN bash -c "source /scrapers/venv/bin/activate && playwright install-deps"
+USER appuser

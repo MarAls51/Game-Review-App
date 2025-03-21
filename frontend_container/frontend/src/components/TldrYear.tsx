@@ -42,7 +42,6 @@ export const TldrYear = () => {
         if(data === 0) {
           setStatStatus(false);
         }
-        console.log(data)
         setMetricData(data);
       } catch (error) {
         setStatStatus(false);

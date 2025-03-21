@@ -1,11 +1,13 @@
 const express = require("express");
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const logger = require("./utils/logger");
 const MongoStore = require('connect-mongo');
+const fs = require('fs');
 
-dotenv.config({ path: "./config/.env" });
+const SESSION_SECRET = fs.readFileSync('/run/secrets/SESSION_SECRET', 'utf8').trim();
+const MONGO_DB = fs.readFileSync('/run/secrets/MONGO_DB', 'utf8').trim();
+const PORT = 5000;
 
 const searchRoutes = require("./routes/search");
 const tldrRoutes = require("./routes/generalreview");
@@ -17,14 +19,13 @@ const chartRoutes = require("./routes/chart");
 const cognitoRoutes = require("./routes/cognito");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
 app.set('trust proxy', 1);
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -33,7 +34,7 @@ app.use(session({
     sameSite: 'none'
   },
   store: MongoStore.create({
-    mongoUrl: process.env.MONGO_DB,
+    mongoUrl: MONGO_DB,
     ttl: 14 * 24 * 60 * 60,
     autoRemove: 'native'
   })
@@ -55,7 +56,8 @@ app.get('/test-session', (req, res) => {
     res.send('Session set');
 });
 
-mongoose.connect(process.env.MONGO_DB, {
+mongoose.connect(MONGO_DB, {
+  tls: true
 }).then(() => {
   logger.info('MongoDB connected');
 }).catch(err => {

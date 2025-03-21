@@ -1,6 +1,9 @@
 const { getSteamRedirectUrl, authenticateSteamUser, fetchUserGames } = require("../services/steamLoginService");
 const User = require("../models/userSchema");
 const logger = require('../utils/logger');
+const fs = require('fs');
+
+const FRONTEND_URL = fs.readFileSync('/run/secrets/FRONTEND_URL', 'utf8').trim();
 
 async function login(req, res) {
     try {
@@ -46,10 +49,10 @@ async function loginCallback(req, res) {
         }
 
         logger.info(`Successfully authenticated and updated user ${sub}, redirecting to account page`);
-        res.redirect(`${process.env.FRONTEND_URL}account`);
+        res.redirect(`${FRONTEND_URL}account`);
     } catch (error) {
         logger.error(`Steam login error for sub ${req.session.sub}: ${error.message}`);
-        res.redirect(`${process.env.FRONTEND_URL}account`);
+        res.redirect(`${FRONTEND_URL}account`);
     }
 }
 

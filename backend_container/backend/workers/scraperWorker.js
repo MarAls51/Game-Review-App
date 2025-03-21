@@ -5,7 +5,7 @@ const path = require('path');
 const logger = require('../utils/logger');
 
 const scriptPath = path.join(__dirname, '../../', 'scrapers', 'SteamScraper.py');
-const pythonPath = path.join(__dirname, '../../', 'scrapers', 'env', 'Scripts', 'python');
+const pythonPath = path.join(__dirname, '../../', 'scrapers', 'venv', 'bin', 'python');
 
 logger.info("Worker initialized. Waiting for tasks...");
 

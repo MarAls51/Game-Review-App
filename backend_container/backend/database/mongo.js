@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 const logger = require('../utils/logger');
+const fs = require('fs');
 
-const MONGO_URI = process.env.MONGO_DB;
+const MONGO_URI = fs.readFileSync('/run/secrets/MONGO_DB', 'utf8').trim();
 
 async function connectDB() {
   try {

@@ -3,9 +3,12 @@ const GameReview = require("../models/mongoSchema");
 const { reviewPrompt, deepDiveReviewPrompt } = require("../utils/const");
 const { runWorkerTask } = require("../workers/workerManager");
 const logger = require('../utils/logger');
+const fs = require('fs');
+
+const OPENAI_API_KEY = fs.readFileSync('/run/secrets/OPENAI_API_KEY', 'utf8').trim();
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: OPENAI_API_KEY
 });
 
 async function fetchGameReviewFromDatabase(name) {

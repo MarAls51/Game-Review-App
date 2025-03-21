@@ -1,15 +1,18 @@
 const axios = require("axios");
 const Steam = require("node-steam-openid");
 const logger = require('../utils/logger');
+const fs = require('fs');
 
-const STEAM_API_KEY = process.env.STEAM_API_KEY;
+const STEAM_API_KEY = fs.readFileSync('/run/secrets/STEAM_API_KEY', 'utf8').trim();
+
+const BACKEND_URL = fs.readFileSync('/run/secrets/BACKEND_URL', 'utf8').trim();
 const STEAM_USER_API_URL = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/";
 const STEAM_APPS_LIST_URL = "https://api.steampowered.com/ISteamApps/GetAppList/v2/";
 
 const steam = new Steam({
     apiKey: STEAM_API_KEY,
-    realm: process.env.BACKEND_URL,
-    returnUrl: `${process.env.BACKEND_URL}api/login/callback`,
+    realm: BACKEND_URL,
+    returnUrl: `${BACKEND_URL}api/login/callback`,
 });
 
 let steamAppList = {};

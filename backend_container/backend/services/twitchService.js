@@ -1,8 +1,9 @@
 const axios = require("axios");
 const logger = require('../utils/logger');
+const fs = require('fs');
 
-const TWITCH_API_KEY = process.env.TWITCH_API_KEY;
-const TWITCH_CLIENT_KEY = process.env.TWITCH_CLIENT_KEY;
+const TWITCH_API_KEY = fs.readFileSync('/run/secrets/TWITCH_API_KEY', 'utf8').trim();
+const TWITCH_CLIENT_KEY = fs.readFileSync('/run/secrets/TWITCH_CLIENT_KEY', 'utf8').trim();
 
 let accessToken = null;
 let tokenExpirationTime = null;
