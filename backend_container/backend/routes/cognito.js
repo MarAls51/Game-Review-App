@@ -13,7 +13,8 @@ router.get("/auth-config", (req, res) => {
       redirect_uri: fs.readFileSync('/run/secrets/REDIRECT_URL', 'utf8').trim(),
       response_type:fs.readFileSync('/run/secrets/RESPONSE_TYPE', 'utf8').trim(),
       post_logout_redirect_uri: fs.readFileSync('/run/secrets/LOGOUT_URL', 'utf8').trim(),
-      scope: fs.readFileSync('/run/secrets/SCOPE', 'utf8'),
+      scope: fs.readFileSync('/run/secrets/SCOPE', 'utf8').trim(),
+      pkce: true,
     };
 
     if (!config.authority || !config.client_id) {

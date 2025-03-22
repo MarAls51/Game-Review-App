@@ -7,7 +7,7 @@ const FRONTEND_URL = fs.readFileSync('/run/secrets/FRONTEND_URL', 'utf8').trim()
 
 async function login(req, res) {
     try {
-        if (!sub) {
+        if (!req.query.sub) {
             logger.error("sub parameter is missing from session during Steam login");
             return res.status(400).json({ message: "sub parameter is missing from session" });
         }
