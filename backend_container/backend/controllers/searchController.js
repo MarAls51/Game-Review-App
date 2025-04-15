@@ -19,13 +19,15 @@ async function searchGames(query) {
 
         logger.info("Successfully fetched Steam games and Twitch access token");
 
+        const validSteamGames = steamGames.filter(game => game.description && game.description.trim().length > 0);
+        
         const igdbGames = await searchIGDBGames(query, accessToken);
         logger.info("Successfully fetched IGDB games");
 
         const combinedGames = [];
         const uniqueGameNames = new Set();
 
-        [...steamGames, ...igdbGames].forEach((game) => {
+        [...validSteamGames, ...igdbGames].forEach((game) => {
             const loweredName = game.name.toLowerCase();
             if (!uniqueGameNames.has(loweredName)) {
                 uniqueGameNames.add(loweredName);
@@ -39,6 +41,7 @@ async function searchGames(query) {
         throw new Error(`Error searching for games: ${error.message}`);
     }
 }
+
 
 module.exports = {
     searchGames,

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { sanitizeInput } from "./Sanitizer";
 
 interface SearchBarProps {
   onSearch: (games: any[]) => void;
@@ -9,7 +10,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
+    setSearchQuery(sanitizeInput(e.target.value));
   };
 
   const handleSearchSubmit = async (e: React.FormEvent) => {

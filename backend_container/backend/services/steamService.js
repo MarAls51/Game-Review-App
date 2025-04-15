@@ -1,5 +1,5 @@
 const axios = require("axios");
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 
 async function searchSteamGames(query) {
   try {
@@ -25,22 +25,44 @@ async function searchSteamGames(query) {
 
     const detailsResponses = await Promise.all(detailsRequests);
 
-    return detailsResponses.map((response, index) => ({
-      type: "steam",
-      appid: appIDs[index],
-      name: searchResults[index].name,
-      description: response.data[appIDs[index]]?.data.short_description,
-      screenshots: response.data[appIDs[index]]?.data.screenshots
-        ? response.data[appIDs[index]]?.data.screenshots.map((screenshot) => ({
-            path_full: screenshot.path_full,
-          }))
-        : [],
-      movies: response.data[appIDs[index]]?.data.movies
-        ? response.data[appIDs[index]]?.data.movies.map((movie) => ({
-            url: movie.mp4.max.replace('http://', 'https://'),
-          }))
-        : [],
-    }));
+    return detailsResponses
+      .map((response, index) => {
+        const appID = appIDs[index];
+        const gameData = response.data[appID]?.data;
+
+        if (!gameData || typeof gameData !== "object") {
+          return null;
+        }
+
+        const hasAdultRating = Object.values(gameData.ratings || {}).some(
+          (rating) => {
+            const age = parseInt(rating.required_age, 10);
+            return !isNaN(age) && age >= 18;
+          }
+        );
+
+        if (hasAdultRating) {
+          return null;
+        }
+
+        return {
+          type: "steam",
+          appid: appID,
+          name: searchResults[index].name,
+          description: gameData.short_description,
+          screenshots: gameData.screenshots
+            ? gameData.screenshots.map((screenshot) => ({
+                path_full: screenshot.path_full,
+              }))
+            : [],
+          movies: gameData.movies
+            ? gameData.movies.map((movie) => ({
+                url: movie.mp4.max.replace("http://", "https://"),
+              }))
+            : [],
+        };
+      })
+      .filter(Boolean);
   } catch (error) {
     logger.error("Error searching Steam games:", error);
     return [];
